@@ -1,0 +1,114 @@
+---
+title: "draft_1"
+author: "Nate Lant"
+date: "11/8/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(knitr)
+library(haven)
+library(nhts2017)
+
+opts_chunk$set(echo = TRUE)
+```
+
+```{r start, include=F}
+# how many use wheelchairs?
+nhts_persons %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair) %>% 
+  tally()
+
+# how many responded they have both a manual and motorized wheelchair?
+nhts_persons %>%
+  mutate(wheelchair = ifelse(w_chair == "07" & w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair) %>% 
+  tally()  # 300... does this throw off the data? I actually don't think so, but how many total are there?
+
+# how many people are disabled and education?
+nhts_persons %>%
+  group_by(medcond, educ) %>%
+  tally() %>% spread(educ, n, fill = 0)
+
+
+# example of showing counts of wheelchair and education
+nhts_persons %>% 
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, educ) %>% 
+  tally() %>%
+  filter(educ > 0) %>%
+  spread(wheelchair, n, fill=0)
+
+# try to plot it --the issue is a histogram cant handle the number labels in the data (figure out how to fix this)
+nhts_persons %>% 
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, educ) %>% 
+  tally() %>%
+  filter(educ > 0) %>%
+  ggplot(aes(x = educ, y = n), color = wheelchair) + geom_point() + 
+  scale_y_continuous(expand = c(0,0)) +
+    opts(axis.text.x=theme_text(angle=90))
+
+
+```
+
+While it is reported that there are 25 million americans with disabilities, only  __________ percent of them use a wheelchair
+
+
+```{r income}
+nhts_persons %>%
+  left_join(nhts_households, by = "houseid") %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, hhfaminc) %>% 
+  tally() %>%
+  filter(hhfaminc > 0) %>%
+  spread(wheelchair, n, fill = 0)   # it would also be cool to figure out the weighted portions to get full count histograms.
+  
+```
+
+
+```{r employment}
+# worker status yes or no
+nhts_persons %>% 
+  filter(r_age > 18 & r_age < 64) %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, worker) %>% 
+  tally() %>%
+  filter(worker > 0) %>%
+  spread(wheelchair, n, fill = 0)
+
+# using wkftpt full time or part time employment
+nhts_persons %>% 
+  filter(r_age > 18 & r_age < 64) %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, wkftpt) %>% 
+  tally() %>%
+  filter(wkftpt > 0) %>%
+  spread(wheelchair, n, fill = 0)
+  
+```
+
+```{r vehicle}
+# HHVEHCNT - count of vehicle per household
+nhts_persons %>%
+  left_join(nhts_households, by = "houseid") %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, hhvehcnt) %>% 
+  tally() %>%
+  filter(hhvehcnt > 0) %>%
+  spread(wheelchair, n, fill = 0) # How many persons are in these households? and is this counting persons or households?
+
+
+# VEHOWNED - Own vehicle longer than one year (can't find a more straightforward vehicle ownership variable)
+nhts_persons %>%
+  left_join(nhts_vehicles, by = "houseid") %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, vehowned) %>% 
+  tally() %>%
+  filter(vehowned > 0) %>%
+  spread(wheelchair, n, fill = 0) # how do we get more than 3410 wheelchair?
+```

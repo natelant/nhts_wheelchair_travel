@@ -1,0 +1,5 @@
+---
+title: "About This Website"
+---
+
+Using the 2917 National Household Travel Survey and my data munging abilities, I have found that mobility is infact different from regular mobility. I could use t-test statistics to compare means, maybe find linear regression applications too. 
