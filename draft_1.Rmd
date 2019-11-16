@@ -35,25 +35,53 @@ nhts_persons %>%
   tally() %>% spread(educ, n, fill = 0)
 
 
-# example of showing counts of wheelchair and education
+# example of showing counts %>% percent of wheelchair and education
 nhts_persons %>% 
   mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
   group_by(wheelchair, educ) %>% 
   tally() %>%
   filter(educ > 0) %>%
-  spread(wheelchair, n, fill=0)
+  spread(wheelchair, n, fill=0) %>%
+  mutate("Non-wheelchair" = `FALSE`/sum(`FALSE`), "Wheelchair" = `TRUE`/sum(`TRUE`))
 
-# try to plot it --the issue is a histogram cant handle the number labels in the data (figure out how to fix this)
+
+  # now pipe this into a histogram. and include disabled community
 nhts_persons %>% 
-  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
-  group_by(wheelchair, educ) %>% 
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE),
+         disability = ifelse(medcond == "01", "Disabled", "Abled")) %>%
+  group_by(wheelchair, disability, educ) %>% 
   tally() %>%
-  filter(educ > 0) %>%
-  ggplot(aes(x = educ, y = n), color = wheelchair) + geom_point() + 
-  scale_y_continuous(expand = c(0,0)) +
-    opts(axis.text.x=theme_text(angle=90))
+  filter(educ > 0) %>% 
+  group_by(wheelchair, disability) %>%
+  mutate(distribution = n/sum(n),
+         educ = as.factor(educ)) %>%
+  ggplot(aes(x = educ, y = distribution)) + geom_col(aes(fill = wheelchair), position = "dodge") +
+  ggtitle("Education level")
 
+```
 
+```{r practice1.1, include=F}
+# I want to try to get my histogram to compare disabled to wheelchair to abled.
+nhts_persons %>% 
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE),
+         disability = ifelse(medcond == "01", "Disabled", "Abled")) %>%
+  group_by(wheelchair, disability, educ) %>% 
+  tally() %>%
+  filter(educ > 0) %>% 
+  group_by(wheelchair, disability) %>%
+  mutate(distribution = n/sum(n),
+         educ = as.factor(educ),
+         Ability = if ( wheelchair == FALSE & disability == "Abled") {
+                          "Abled"
+                          } else if ( wheelchair == FALSE & disability == "Disabled") {
+                          "Disabled but no wheelchair"
+                          } else if ( wheelchair == TRUE & disability == "Disabled") {
+                          "Wheelchairguy"
+                          } else {
+                          NA
+                          }) %>%
+  ggplot(aes(x = educ, y = distribution)) + geom_col(aes(fill = Ability), position = "dodge") +
+  ggtitle("Education level")
 ```
 
 While it is reported that there are 25 million americans with disabilities, only  __________ percent of them use a wheelchair
