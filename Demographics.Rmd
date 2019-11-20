@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 The purpose of drawing conclusions from the NHTS is to provide better transportation--more accessible, safer, faster, etc.--by understanding the transportation patterns of the U.S. citizens.
 
 This page will display the information found in the 2017 NHTS and compare the population of wheelchair users to the able-bodied population. 
-<!-- This page also compares the disabled population in addition to the population of wheelchair users. --> 
+<!-- This page also compares the disabled population (those who reported to have a medical condition for longer than six months) in addition to the population of wheelchair users. --> 
 
 In this analysis I use the metric of distribution of relative population. For example
 $$ wheelchairpercentage = \frac{counts}{wheelchairpopulation} $$
@@ -31,6 +31,7 @@ $$ abledpercentage = \frac{counts}{abledpopulation} $$
 Of the U.S. population, it is reported that only ____ percent use wheelchairs. This is approximately ___ hundered americans.
 
 ```{r population.wheelchair}
+# Wheelchair true or false population
 nhts_persons %>%
   mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
   group_by(wheelchair) %>% 
@@ -38,6 +39,23 @@ nhts_persons %>%
   mutate(percent = n/sum(n),
          responses = n) %>%
   select(-n)
+
+# Create a variable that defines "Ability" as "Abled", "Disabled", or "Wheelchair"
+nhts_persons %>%
+  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
+                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
+                             medcond == "02" ~ "Abled")) %>%   # this is only people who reported not having a medical condition.
+  group_by(Ability) %>% 
+  filter(Ability != "NA") %>%
+  summarise(population = sum(wtperfin),
+            n_counts = n()) %>%
+  mutate(dist. = population/sum(population))
+
+# validate with disabled popoulation
+nhts_persons %>%
+  mutate(disabled = ifelse(medcond6 == "02", TRUE, FALSE)) %>%
+  group_by(disabled) %>% tally()
+  
 ```
 
 ### Population by Age
@@ -46,19 +64,27 @@ Let's look at how wheelchair users are distributed by age. This can be confusing
 ```{r population.age}
 # histogram comparing both abled and wheelchair users.
 nhts_persons %>% 
-  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
-  group_by(wheelchair, r_age) %>%
-  tally() %>%
-  filter(r_age > 0) %>%
-  mutate(Distribution = n/sum(n)) %>%
-  ggplot(aes(x = r_age, y = Distribution)) + geom_col(aes(fill = wheelchair), position = "dodge") +
-  ggtitle("Age Distribution by Population") +
-  ylim(0, 0.04)
+  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
+                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",   # i think this is missing disabled who ride wheelchairs
+                             medcond == "02" ~ "Abled"),
+         Age = case_when(r_age >= 00 & r_age < 10 ~ "0 - 10",
+                         r_age >= 10 & r_age < 20 ~ "10 - 20",
+                         r_age >= 20 & r_age < 30 ~ "20 - 30",
+                         r_age >= 30 & r_age < 40 ~ "30 - 40",
+                         r_age >= 40 & r_age < 50 ~ "40 - 50",
+                         r_age >= 50 & r_age < 60 ~ "50 - 60",
+                         r_age >= 60 & r_age < 70 ~ "60 - 70",
+                         r_age >= 70 & r_age < 80 ~ "70 - 80",
+                         r_age >= 80 & r_age < 90 ~ "80 - 90",
+                         r_age >= 90 & r_age < 100 ~ "90 - 100",)) %>%
+  group_by(Ability, Age) %>%
+  filter(Ability != "NA") %>%
+  summarise(population = sum(wtperfin)) %>%
+  mutate(Distribution = population/sum(population)) %>%
+  ggplot(aes(x = Age, y = Distribution)) + geom_col(aes(fill = Ability), position = "dodge") +
+  ggtitle("Age Distribution by Population")
 ```
 
-```{r population.age.1}
-# histogram just showing distribution of wheelchair users by age group
-```
 
 ```{r population.boxplot}
 # Show boxplot of age distribution with age on y axis and wheelchair boolean on the x
