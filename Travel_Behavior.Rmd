@@ -1,0 +1,52 @@
+---
+title: "Travel Behavior"
+author: "Nate Lant"
+date: "11/19/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(knitr)
+library(haven)
+library(nhts2017)
+
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup.trips, include=F}
+nhts_trips %>% View()
+nhts_persons %>% View()
+
+nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>% View()
+
+```
+
+
+## Mode Choice
+
+```{r mode.choice}
+# distribution of trips by mode
+nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, trptrans) %>%
+  tally() %>% 
+  mutate(n = as.double(n),
+         trptrans = as.factor(trptrans),
+         Distribution = n/sum(n)) %>%
+  filter(trptrans > 0,
+         trptrans < 25) %>% 
+  ggplot(aes(x = trptrans, y = Distribution)) + geom_col(aes(fill = wheelchair), position = "dodge") +
+  ggtitle("Mode Choice") +
+  xlab("Mode") + ylab("Distribution of Trips")
+
+
+```
+
+
+## Trip Purpose
+
+
+

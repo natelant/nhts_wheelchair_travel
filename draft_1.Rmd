@@ -21,7 +21,8 @@ opts_chunk$set(echo = TRUE)
 nhts_persons %>%
   mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
   group_by(wheelchair) %>% 
-  tally()
+  tally() %>% 
+  mutate(percent = n/sum(n))
 
 # how many responded they have both a manual and motorized wheelchair?
 nhts_persons %>%
@@ -88,6 +89,7 @@ While it is reported that there are 25 million americans with disabilities, only
 
 
 ```{r income}
+# household income distribution 
 nhts_persons %>%
   left_join(nhts_households, by = "houseid") %>%
   mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
@@ -139,4 +141,9 @@ nhts_persons %>%
   tally() %>%
   filter(vehowned > 0) %>%
   spread(wheelchair, n, fill = 0) # how do we get more than 3410 wheelchair?
+```
+
+
+```{r trips}
+nhts_trips %>% View()
 ```

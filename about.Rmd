@@ -1,5 +1,7 @@
 ---
-title: "About This Website"
+title: "About This Project"
 ---
 
-Using the 2917 National Household Travel Survey and my data munging abilities, I have found that mobility is infact different from regular mobility. I could use t-test statistics to compare means, maybe find linear regression applications too. 
+Using the 2917 National Household Travel Survey and my data munging abilities, I have found that mobility is infact different from regular mobility. I could use t-test statistics to compare means, maybe find linear regression applications too.
+
+The 2017 National Household Travel Survey contains data surrounding mobility for users with disabilities, including wheelchairs. Wheelchairs introduce a unique challenge to accessibility in all modes, but most recently to the mode of on-demand ride-hailing....

@@ -1,7 +1,5 @@
 ---
-title: "My Final Project Website"
+title: "2017 National Household Travel Survey"
 ---
 
-Hello, Website!
-
-This website describes my findings on mobility for the disabled compared to mobility for the non-disabled.
+The 2017 National Household Travel Survey contains data surrounding mobility for users with disabilities, including wheelchairs. Wheelchairs introduce a unique challenge to accessibility in all modes, but most recently to the mode of on-demand ride-hailing....
