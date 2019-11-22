@@ -12,6 +12,11 @@ library(tidyverse)
 library(knitr)
 library(haven)
 library(nhts2017)
+library(plotly)
+library(pander)
+library(Hmisc)
+
+source("R/functions.R")
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -28,25 +33,48 @@ nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>% View()
 ## Mode Choice
 
 ```{r mode.choice}
-# distribution of trips by mode
-nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>%
-  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
-  group_by(wheelchair, trptrans) %>%
-  tally() %>% 
-  mutate(n = as.double(n),
-         trptrans = as.factor(trptrans),
-         Distribution = n/sum(n)) %>%
-  filter(trptrans > 0,
-         trptrans < 25) %>% 
-  ggplot(aes(x = trptrans, y = Distribution)) + geom_col(aes(fill = wheelchair), position = "dodge") +
-  ggtitle("Mode Choice") +
-  xlab("Mode") + ylab("Distribution of Trips")
+# Distribution of trips by mode
+clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), trptrans) %>%
+  plotly_bar_nhts(trptrans, Distribution, "Distribution of Trips by Mode")
 
 
 ```
 
 
+## Primary Activity in Previous Week
+<!--- PRMACT --->
+```{r activity}
+# Distribution of trips by mode
+clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), prmact) %>%
+  plotly_bar_nhts(prmact, Distribution, "Distribution of Trips by Mode")
+
+
+```
+
 ## Trip Purpose
+<!--- trip purpose summary: Whytrip1s --->
+
+<!--- trip origin purpose: whyfrom --->
+<!--- trip destination purpose: whyto --->
+
+## Trip Distance
+<!--- TRPMILES --->
+
+## Trip Duration in Minutes
+<!--- TRVLCMIN responses 0-1200 --->
+
+## Number of Drivers in Household
+<!--- drvrcnt -->
+
+## Number of Household Vehicles
+<!--- HHVehcnt (might need to blend hh and pers data) --->
+
+## Trip distance in miles for personally driven vehicle trips
+<!--- VMT_MILE responses 0-5441 --->
+
+
+
+
 
 
 

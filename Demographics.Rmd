@@ -12,6 +12,12 @@ library(tidyverse)
 library(knitr)
 library(haven)
 library(nhts2017)
+library(plotly)
+library(pander)
+library(ggpubr)
+library(Hmisc)
+
+source("R/functions.R")
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -31,26 +37,22 @@ $$ abledpercentage = \frac{counts}{abledpopulation} $$
 Of the U.S. population, it is reported that only ____ percent use wheelchairs. This is approximately ___ hundered americans.
 
 ```{r population.wheelchair}
-# Wheelchair true or false population
-nhts_persons %>%
-  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
-  group_by(wheelchair) %>% 
-  tally() %>% 
-  mutate(percent = n/sum(n),
-         responses = n) %>%
-  select(-n)
-
 # Create a variable that defines "Ability" as "Abled", "Disabled", or "Wheelchair"
-nhts_persons %>%
+nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
   mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
                              medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
-                             medcond == "02" ~ "Abled")) %>%   # this is only people who reported not having a medical condition.
-  group_by(Ability) %>% 
+                             medcond == "02" ~ "Abled"),           # this is only people who reported not having a medical condition.
+         UT = ifelse(hhstate == "UT", "Utah", "U.S.")) %>%   
+  group_by(UT, Ability) %>% 
   filter(Ability != "NA") %>%
-  summarise(population = sum(wtperfin),
-            n_counts = n()) %>%
-  mutate(dist. = population/sum(population))
+  summarise(survey = n(),
+            population = sum(wtperfin)) %>%
+  mutate(dist. = population/sum(population)) %>%
+  pander()
 
+```
+
+```{r validate, include=F}
 # validate with disabled popoulation
 nhts_persons %>%
   mutate(disabled = ifelse(medcond6 == "02", TRUE, FALSE)) %>%
@@ -62,10 +64,10 @@ nhts_persons %>%
 Let's look at how wheelchair users are distributed by age. This can be confusing as it looks like there are more wheelchair users than abled bodies at age 75, but remember it is distribution of wheelchair users to total wheelchair users.
 
 ```{r population.age}
-# histogram comparing both abled and wheelchair users.
-nhts_persons %>% 
+# build bar chart with school zones %>% into my plotly_bar_nhts function not filtered by age
+nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
   mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
-                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",   # i think this is missing disabled who ride wheelchairs
+                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",
                              medcond == "02" ~ "Abled"),
          Age = case_when(r_age >= 00 & r_age < 10 ~ "0 - 10",
                          r_age >= 10 & r_age < 20 ~ "10 - 20",
@@ -76,28 +78,89 @@ nhts_persons %>%
                          r_age >= 60 & r_age < 70 ~ "60 - 70",
                          r_age >= 70 & r_age < 80 ~ "70 - 80",
                          r_age >= 80 & r_age < 90 ~ "80 - 90",
-                         r_age >= 90 & r_age < 100 ~ "90 - 100",)) %>%
-  group_by(Ability, Age) %>%
+                         r_age >= 90 & r_age < 100 ~ "90 - 100"),
+         UT = ifelse(hhstfips == "49", "Utah", "U.S.")) %>%
+  group_by(UT, Ability, Age) %>%
   filter(Ability != "NA") %>%
   summarise(population = sum(wtperfin)) %>%
   mutate(Distribution = population/sum(population)) %>%
-  ggplot(aes(x = Age, y = Distribution)) + geom_col(aes(fill = Ability), position = "dodge") +
-  ggtitle("Age Distribution by Population")
+  plotly_bar_nhts(Age, Distribution, "Distribution of Age")
+
+# clean the age data filtered by age
+clean_nhts(nhts_persons, nhts_households, join_by = "houseid", r_age) %>%
+  plotly_bar_nhts(r_age, Distribution, "Distribution by Age (18-64)")
 ```
 
 
-```{r population.boxplot}
+```{r population.boxplot, warnings=F}
 # Show boxplot of age distribution with age on y axis and wheelchair boolean on the x
 nhts_persons %>%
-  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
-  group_by(wheelchair, r_age) %>%
-  filter(r_age > 0) %>% 
-  ggplot(aes(x = wheelchair, y = r_age)) + geom_boxplot() 
+  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
+                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",
+                             medcond == "02" ~ "Abled")) %>%
+  group_by(Ability, r_age, r_sex) %>%
+  filter(r_age > 0, Ability != "NA") %>%
+  ggplot(aes(x = Ability, y = r_age)) + geom_boxplot(aes(color = r_sex)) +
+  stat_compare_means(aes(group = r_sex))
   
 ```
 
 ## Income
 
+```{r income.setup, echo=F}
+# Clean the income data and %>% into the barplot
+clean_nhts(nhts_persons, nhts_households, "houseid", hhfaminc) %>%
+  plotly_bar_nhts(hhfaminc, Distribution, "Distribution of Household Income")
+```
+
+
+
 ## Employment
 
+```{r employ, echo=F}
+clean_nhts(nhts_persons, nhts_households, "houseid", worker) %>%
+  plotly_bar_nhts(worker, Distribution, "Worker Status", ylab = "Distribution")
+```
+
 ## Education
+
+```{r education, echo=F}
+clean_nhts(nhts_persons, nhts_households, "houseid", educ) %>%
+  plotly_bar_nhts(educ, Distribution, "Education", ylab = "Distribution")
+```
+
+## Relationship Status
+
+```{r relation, echo=F}
+clean_nhts(nhts_persons, nhts_households, "houseid", r_relat) %>%
+  plotly_bar_nhts(r_relat, Distribution, "Who filled out the survey?", ylab = "Distribution")
+```
+
+## Gender
+
+```{r gender, echo=F}
+clean_nhts(nhts_persons, nhts_households, "houseid", r_sex) %>%
+  plotly_bar_nhts(r_sex, Distribution, "Distribution of Gender", ylab = "Distribution")
+```
+
+## Race
+
+```{r race, echo=F}
+clean_nhts(nhts_persons, nhts_households, "houseid", r_race) %>%
+  plotly_bar_nhts(r_race, Distribution, "Distribution of Race", ylab = "Distribution")
+```
+
+
+## Housing Density
+<!--- HBRESDN --->
+
+## Population Density
+<!--- HBPPOPDN --->
+
+## Home Ownership
+<!--- Homeown --->
+
+## Personal Opinion of Personal Health
+<!---  --->
+
+##

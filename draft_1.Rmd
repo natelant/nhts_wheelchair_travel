@@ -146,4 +146,33 @@ nhts_persons %>%
 
 ```{r trips}
 nhts_trips %>% View()
+
+#here is to try to extract the labels in the variable column
+nhts_persons %>%
+  left_join(nhts_households, by = "houseid") %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, r_race) %>% 
+  tally() %>% ipums_val_labels(r_race)
+
+nhts_persons %>%
+  left_join(nhts_households, by = "houseid") %>%
+  mutate(wheelchair = ifelse(w_chair == "07" | w_mtrchr == "08", TRUE, FALSE)) %>%
+  group_by(wheelchair, r_race) %>% 
+  tally() %>% as_factor()
+
+# how to get utah by itself
+nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
+    mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
+                               medcond6 == "02" | medcond6 == "03" ~ "Disabled",
+                               medcond == "02" ~ "Abled"),
+           UT = ifelse(hhstfips == "49", TRUE, FALSE))  %>%          
+    group_by(Ability, r_sex, UT) %>% 
+    filter(Ability != "NA",
+           r_sex > 0) %>%
+    summarise(Survey = n(),
+              Population = sum(wtperfin)) %>%
+    as_factor() %>%
+    mutate(Distribution = Population/sum(Population))
+
+
 ```
