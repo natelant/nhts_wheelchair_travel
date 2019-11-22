@@ -44,7 +44,7 @@ clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), trptran
 ## Primary Activity in Previous Week
 <!--- PRMACT --->
 ```{r activity}
-# Distribution of trips by mode
+# Distribution of weekly activities
 clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), prmact) %>%
   plotly_bar_nhts(prmact, Distribution, "Distribution of Trips by Mode")
 

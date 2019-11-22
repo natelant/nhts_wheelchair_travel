@@ -1,40 +1,45 @@
-# I want to write a histogram function
-# I want to write a boxplot function too.
 
 
 
 ###________________________________________________________
 
+##     Function 1 - data clean - qualitative data
 
-# This  practice function creates a barchart
-
-practice_barchart <- function(by_var, data1, data2, join_by, title, subtitle = NULL){
+# This function joins and cleans two data sets into a small tibble that
+# is grouped by Ability and a variable input. It reports the survey count
+# the population count (weighted counts) and the grouped distribution
+# It ALSO FILTERS AGE!!!
+clean_nhts <- function(data1, data2, join_by, by_var){
   
   quote_var <- enquo(by_var)
+  
   
   data1 %>% left_join(data2, by = join_by) %>%
     mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
                                medcond6 == "02" | medcond6 == "03" ~ "Disabled",
-                               medcond == "02" ~ "Abled")) %>%
+                               medcond == "02" ~ "Abled"))  %>%
+    filter(r_age >= 18 & r_age < 65) %>%              # filtered by ages 18-64
     group_by(Ability, !!quote_var) %>% 
     filter(Ability != "NA",
            !!quote_var > 0) %>%
     summarise(Survey = n(),
               Population = sum(wtperfin)) %>%
-    mutate(Distribution = Population/sum(Population),
-           x_var = as.factor(!!quote_var)) %>%
-  ggplot(aes(x = x_var, y = Distribution)) + 
-    geom_col(aes(fill = Ability), position = "dodge") +
-    ggtitle(title, subtitle = subtitle)
-
-}
+    as_factor() %>%
+    mutate(Distribution = Population/sum(Population))
+  
+} 
 
 
 ###__________________________________________________________
 
 
-# Write function to join and clean data
-clean_nhts <- function(data1, data2, join_by, by_var){
+##     Function 2 - Data clean UT - qualitative data
+
+# same function as function 1, however, it also groups by the utah population
+# a challenge is that the UT variable is only available in the nhts_households
+# file. Note that there are not enough utah wheelchair users to make data
+# valid in my opinion.
+clean_nhts_ut <- function(data1, data2, join_by, by_var){
   
   quote_var <- enquo(by_var)
 
@@ -42,17 +47,143 @@ clean_nhts <- function(data1, data2, join_by, by_var){
   data1 %>% left_join(data2, by = join_by) %>%
     mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
                                medcond6 == "02" | medcond6 == "03" ~ "Disabled",
-                               medcond == "02" ~ "Abled"))  %>%          ## I could also use the hhstate variable, its exactly the same
-    group_by(Ability, !!quote_var) %>% 
+                               medcond == "02" ~ "Abled"),
+           UT = ifelse(hhstfips == "49", "Utah", "U.S."))  %>%          ## I could also use the hhstate variable, its exactly the same
+    filter(r_age >= 18 & r_age < 65) %>%                          ## filtered by ages 18-64
+    group_by(UT, Ability, !!quote_var) %>% 
     filter(Ability != "NA",
            !!quote_var > 0) %>%
     summarise(Survey = n(),
               Population = sum(wtperfin)) %>%
-    filter(r_age >= 18 & r_age < 65) %>%
     as_factor() %>%
     mutate(Distribution = Population/sum(Population))
 
 } 
+
+
+
+###___________________________________________________________
+
+##  Function 3 - Bar Plot in Plotly - qualitative data
+
+
+# Write function to form plotly barchart (qualitative data)
+# if fed utah specific data, it will graph utah data...
+plotly_bar_nhts <- function(data, x_var, y_var, title, subtitle = NULL, xlab = NULL, ylab = NULL){
+  
+  quote_varx <- enquo(x_var)
+  quote_vary <- enquo(y_var)
+  
+  plot <- ggplot(data, aes(x = !!quote_varx, y = !!quote_vary)) + 
+    geom_col(aes(fill = Ability), colour = "Black", position = "dodge") +
+    ggtitle(title, subtitle) +
+    labs(x = xlab, y = ylab) +
+    scale_fill_brewer(palette = "PuBuGn", direction = 2) + 
+    theme(axis.text.x = element_text(size  = 10, 
+                                     angle = 45,
+                                     hjust = 1,
+                                     vjust = 1))
+    #scale_x_discrete(labels = abbreviate)
+    
+  
+  plot %>% ggplotly(tooltip = c("x", "y", "fill"))
+  
+}
+
+
+###______________________________________________________________
+
+
+##   Function 4 - Bar Plot in plotly UT - Qualitative data
+
+# This function works the same as function 3 but adds a facet_wrap at the end to compare
+# to the utah data set.
+plotly_bar_nhts_ut <- function(data, x_var, y_var, title, subtitle = NULL, xlab = NULL, ylab = NULL){
+  
+  quote_varx <- enquo(x_var)
+  quote_vary <- enquo(y_var)
+  
+  plot1 <- ggplot(data, aes(x = !!quote_varx, y = !!quote_vary)) + 
+    geom_col(aes(fill = Ability), colour = "Black", position = "dodge") +
+    ggtitle(title, subtitle) +
+    labs(x = xlab, y = ylab) +
+    scale_fill_brewer(palette = "PuBuGn", direction = 2) + 
+    theme(axis.text.x = element_text(size  = 10, 
+                                     angle = 45,
+                                     hjust = 1,
+                                     vjust = 1)) +
+    facet_wrap(~UT)
+  #scale_x_discrete(labels = abbreviate)
+  
+  
+  plot1 %>% ggplotly(tooltip = c("x", "y", "fill"))
+  
+}
+
+
+
+###___________________________________________________________
+
+##  Function 5 - Data summary - Quantitative data sets
+
+
+# this function is used to summarize the quantitative data sets (trip miles, age,
+# trip time, etc)
+
+# data example. erase when complete.
+nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>%
+  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
+                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
+                             medcond == "02" ~ "Abled")) %>%   
+  group_by(Ability) %>% 
+  filter(Ability != "NA") %>%
+  summarise(mean = weighted.mean(trpmiles, wtperfin),
+            sd = sqrt(wtd.var(trpmiles, wtperfin))) %>% pander()
+
+# writing function below
+summary_nhts <- function(){
+  
+  
+}
+
+
+
+
+
+###___________________________________________________________
+
+##    Function 6 - Boxplot in plotly - Quantitative data
+
+
+# Write function to form plotly boxplot (quantitative data)
+
+# data example. erase when done
+nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>%
+  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
+                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
+                             medcond == "02" ~ "Abled")) %>% 
+  group_by(Ability,)
+
+
+plotly_box_nhts <- function(){
+  
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+###################################################################################
+
+
+###################################################################################
 
 ###___________________________________________________________
 
@@ -71,7 +202,7 @@ practice_clean_nhts <- function(data1, data2, join_by, by_var, by_var2, by_var3)
                                medcond == "02" ~ "Abled"),
            mutate(quote_var2 = ifelse(is_empty(by_var2)==TRUE,NA,quote_var2),
                   quote_var3 = ifelse(is_empty(by_var3)==TRUE,NA,quote_var3))) %>%           # this is the experiment line
-  group_by(Ability, !!quote_var, !!quote_var2, !!quote_var3) %>% 
+    group_by(Ability, !!quote_var, !!quote_var2, !!quote_var3) %>% 
     filter(Ability != "NA",
            !!quote_var > 0,
            !!quote_var2 > 0,
@@ -84,79 +215,5 @@ practice_clean_nhts <- function(data1, data2, join_by, by_var, by_var2, by_var3)
            x_var3 = as.factor(!!quote_var3))
   
 } 
-
-###___________________________________________________________
-
-
-# Write function to form plotly barchart (qualitative data)
-plotly_bar_nhts <- function(data, x_var, y_var, title, subtitle = NULL, xlab = NULL, ylab = NULL){
-  
-  quote_varx <- enquo(x_var)
-  quote_vary <- enquo(y_var)
-  
-  plot <- ggplot(data, aes(x = !!quote_varx, y = !!quote_vary)) + 
-    geom_col(aes(fill = Ability), colour = "Black", position = "dodge") +
-    ggtitle(title, subtitle) +
-    labs(x = xlab, y = ylab) +
-    scale_fill_brewer(palette = "PuBuGn", direction = 2) + 
-    theme(axis.text.x = element_text(size  = 10, 
-                                     angle = 45,
-                                     hjust = 1,
-                                     vjust = 1))
-    #facet_wrap(~UT)
-    #scale_x_discrete(labels = abbreviate)
-    
-  
-  plot %>% ggplotly(tooltip = c("x", "y", "fill"))
-  
-}
-
-
-
-
-
-###___________________________________________________________
-
-
-# Write function to srite summary table (mean, sd)
-# example
-nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>%
-  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
-                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
-                             medcond == "02" ~ "Abled")) %>%   
-  group_by(Ability) %>% 
-  filter(Ability != "NA") %>%
-  summarise(mean = weighted.mean(trpmiles, wtperfin),
-            sd = sqrt(wtd.var(trpmiles, wtperfin))) %>% pander()
-
-
-summary_nhts <- function(){
-  
-  
-}
-
-
-
-
-
-###___________________________________________________________
-
-
-# Write function to form plotly boxplot (quantitative data)
-#example
-nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>%
-  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
-                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
-                             medcond == "02" ~ "Abled")) %>% 
-  group_by(Ability,)
-
-
-plotly_box_nhts <- function(){
-  
-  
-}
-
-
-
 
 

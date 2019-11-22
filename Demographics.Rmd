@@ -64,7 +64,7 @@ nhts_persons %>%
 Let's look at how wheelchair users are distributed by age. This can be confusing as it looks like there are more wheelchair users than abled bodies at age 75, but remember it is distribution of wheelchair users to total wheelchair users.
 
 ```{r population.age}
-# build bar chart with school zones %>% into my plotly_bar_nhts function not filtered by age
+# build bar chart with age zones %>% into my plotly_bar_nhts function not filtered by age
 nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
   mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
                              medcond6 == "02" | medcond6 == "03" ~ "Disabled",
@@ -79,14 +79,14 @@ nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
                          r_age >= 70 & r_age < 80 ~ "70 - 80",
                          r_age >= 80 & r_age < 90 ~ "80 - 90",
                          r_age >= 90 & r_age < 100 ~ "90 - 100"),
-         UT = ifelse(hhstfips == "49", "Utah", "U.S.")) %>%
+         UT = ifelse(hhstfips == "49", "Utah", "U.S.")) %>%                       # This is filtered by utah
   group_by(UT, Ability, Age) %>%
   filter(Ability != "NA") %>%
   summarise(population = sum(wtperfin)) %>%
   mutate(Distribution = population/sum(population)) %>%
-  plotly_bar_nhts(Age, Distribution, "Distribution of Age")
+  plotly_bar_nhts_ut(Age, Distribution, "Distribution of Age")
 
-# clean the age data filtered by age
+# clean the age data filtered by age. no age groups. not comparing utah
 clean_nhts(nhts_persons, nhts_households, join_by = "houseid", r_age) %>%
   plotly_bar_nhts(r_age, Distribution, "Distribution by Age (18-64)")
 ```
