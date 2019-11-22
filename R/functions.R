@@ -124,24 +124,33 @@ plotly_bar_nhts_ut <- function(data, x_var, y_var, title, subtitle = NULL, xlab 
 
 ###___________________________________________________________
 
-##  Function 5 - Data summary - Quantitative data sets
+##  Function 5 - Data summary - Quantitative data sets (ability, var_quant, var_qual)
 
 
 # this function is used to summarize the quantitative data sets (trip miles, age,
-# trip time, etc)
+# trip time, etc) The function takes one quantitative variable and groups it by
+# another qualitative varaibel i.e. trip distance by ability and gender
 
-# data example. erase when complete.
-nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>%
-  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
-                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
-                             medcond == "02" ~ "Abled")) %>%   
-  group_by(Ability) %>% 
-  filter(Ability != "NA") %>%
-  summarise(mean = weighted.mean(trpmiles, wtperfin),
-            sd = sqrt(wtd.var(trpmiles, wtperfin))) %>% pander()
 
-# writing function below
-summary_nhts <- function(){
+summary_nhts <- function(data1, data2, join_by, by_var_quant, by_var_qual, title = NULL){
+  
+  quote_var <- enquo(by_var_quant)
+  quote_var1 <- enquo(by_var_qual)
+  
+  data1 %>% left_join(data2, by = join_by) %>%
+    mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
+                               medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
+                               medcond == "02" ~ "Abled")) %>% 
+    filter(r_age >= 18 & r_age < 65,
+           !!quote_var > 0) %>%
+    group_by(!!quote_var1, Ability) %>% 
+    filter(Ability != "NA",
+           !!quote_var1 > 0) %>%
+    summarise(median = median(!!quote_var),
+              mean = weighted.mean(!!quote_var, wtperfin),
+              sd = sqrt(wtd.var(!!quote_var, wtperfin)),
+              max = max(!!quote_var)) %>% 
+    pander(caption = title)
   
   
 }
