@@ -60,8 +60,38 @@ clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), prmact)
 ## Trip Distance
 <!--- TRPMILES --->
 
+```{r trip.miles}
+# stat summary of trip distance by work status
+summary_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), trpmiles, worker, "Trip Distance")
+
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
+  nhts2_stat_summary(trpmiles, worker)
+```
+
 ## Trip Duration in Minutes
 <!--- TRVLCMIN responses 0-1200 --->
+
+```{r min.summary}
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
+  nhts_stat_summary(trvlcmin)
+
+```
+
+```{r boxplot.minutes}
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
+  group_by(Ability) %>%
+  filter(worker > 0,
+         trvlcmin > 0) %>%
+  as_factor() %>%
+  mutate(trvlcmin = as.double(trvlcmin)) %>%
+  ggplot(aes(x = worker, y = trvlcmin, fill = Ability)) +
+  geom_boxplot(position = position_dodge(1))
+
+# test the function
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
+  nhts2_boxplot(trvlcmin, r_sex)
+
+```
 
 ## Number of Drivers in Household
 <!--- drvrcnt -->

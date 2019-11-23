@@ -25,10 +25,6 @@ group1_nhts <- function(data1, data2, join_by, by_var, age1 = 18, age2 = 65){
 
 
 
-
-
-
-
 # -----------------------------------------------------------------------------
 
 ## if two variabalbes

@@ -18,6 +18,8 @@ library(ggpubr)
 library(Hmisc)
 
 source("R/functions.R")
+source("R/output_functions.R")
+
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -111,6 +113,34 @@ nhts_persons %>%
 # Clean the income data and %>% into the barplot
 clean_nhts(nhts_persons, nhts_households, "houseid", hhfaminc) %>%
   plotly_bar_nhts(hhfaminc, Distribution, "Distribution of Household Income")
+
+# Output functions
+nhts_clean(nhts_persons, nhts_households, "houseid") %>%
+  nhts_barplot(hhfaminc, "Distribution of income")
+
+# barplot2
+nhts_clean(nhts_persons, nhts_households, "houseid") %>%
+  nhts_barplot2(hhfaminc, worker, "Income by worker status")
+
+# test barplot 2
+nhts_clean(nhts_persons, nhts_households, "houseid") %>%
+  group_by(worker, Ability, hhfaminc) %>% 
+    filter(worker > 0,
+           hhfaminc > 0) %>%
+    summarise(Population = sum(wtperfin)) %>%
+    as_factor() %>%
+    mutate(Distribution = Population/sum(Population)) %>%
+  ggplot( aes(x = hhfaminc, y = Distribution)) + 
+    geom_col(aes(fill = Ability), colour = "Black", position = "dodge") +
+    ggtitle("title", subtitle = NULL) +
+    labs(x = "xlab", y = "ylab") +
+    scale_fill_brewer(palette = "PuBuGn", direction = 2) + 
+    theme(axis.text.x = element_text(size  = 10, 
+                                     angle = 45,
+                                     hjust = 1,
+                                     vjust = 1)) + 
+    facet_wrap(~worker)
+  
 ```
 
 
@@ -127,6 +157,12 @@ clean_nhts(nhts_persons, nhts_households, "houseid", worker) %>%
 ```{r education, echo=F}
 clean_nhts(nhts_persons, nhts_households, "houseid", educ) %>%
   plotly_bar_nhts(educ, Distribution, "Education", ylab = "Distribution")
+
+# test the spread function
+nhts_clean(nhts_persons, nhts_households, "houseid") %>%
+  nhts_distribution(educ, Survey)
+
+
 ```
 
 ## Relationship Status
