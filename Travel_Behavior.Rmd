@@ -100,7 +100,7 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
 
 # test the function
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
-  nhts2_boxplot(trvlcmin, worker)
+  nhts2_boxplot(trvlcmin, worker, r_sex)
 
 ```
 

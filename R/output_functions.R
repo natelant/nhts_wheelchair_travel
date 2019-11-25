@@ -163,19 +163,21 @@ nhts2_stat_summary <- function(data, by_var, by_var_qual, title = NULL){
 
 # Boxplot comparison (quantitative data)
 
-nhts2_boxplot <- function(data, by_var, by_var_qual, title = NULL, subtitle = NULL, xlab = NULL, ylab = NULL){
+nhts2_boxplot <- function(data, by_var, by_var_x, by_var_facet, title = NULL, subtitle = NULL, xlab = NULL, ylab = NULL){
   
   quote_var <- enquo(by_var)
-  quote_var_qual <- enquo(by_var_qual)
+  quote_var_x <- enquo(by_var_x)
+  quote_var_facet <- enquo(by_var_facet)
   
  table <- data %>%
     group_by(Ability) %>%
     filter(!!quote_var > 0,
-           !!quote_var_qual > 0) %>%
+           !!quote_var_x > 0,
+           !!quote_var_facet > 0) %>%
     as_factor() %>%
     mutate(quantitative = as.double(!!quote_var))
   
-  plot <- ggplot(table, aes(x = !!quote_var_qual, y = quantitative, fill = Ability)) +
+  plot <- ggplot(table, aes(x = !!quote_var_x, y = quantitative, fill = Ability)) +
     geom_boxplot(position = position_dodge(1)) +
     ggtitle(title, subtitle) +
     labs(x = xlab, y = ylab) +
@@ -183,11 +185,10 @@ nhts2_boxplot <- function(data, by_var, by_var_qual, title = NULL, subtitle = NU
     theme(axis.text.x = element_text(size  = 10, 
                                      angle = 45,
                                      hjust = 1,
-                                     vjust = 1))
+                                     vjust = 1)) +
+    facet_wrap(quote_var_facet)
   
-  return(plot)
-  
-  #plot %>% ggplotly(tooltip = c("x", "y", "fill"))
+  plot %>% ggplotly(tooltip = c("x", "y", "fill")) %>% layout(boxmode = "group")
   
 }
 
