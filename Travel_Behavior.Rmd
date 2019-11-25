@@ -16,7 +16,7 @@ library(plotly)
 library(pander)
 library(Hmisc)
 
-source("R/functions.R")
+source("R/output_functions.R")
 
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -34,8 +34,9 @@ nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>% View()
 
 ```{r mode.choice}
 # Distribution of trips by mode
-clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), trptrans) %>%
-  plotly_bar_nhts(trptrans, Distribution, "Distribution of Trips by Mode")
+# new functions
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), age1 = 18, age2 = 65) %>%
+  nhts_barplot(trptrans, "Distribution of trips by mode")
 
 
 ```
@@ -45,11 +46,20 @@ clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), trptran
 <!--- PRMACT --->
 ```{r activity}
 # Distribution of weekly activities
-clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), prmact) %>%
-  plotly_bar_nhts(prmact, Distribution, "Distribution of Trips by Mode")
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
+  nhts_distribution(prmact)
+             
+
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
+  nhts_barplot(prmact, "Distribution of Primary Activity in the previous week")
 
 
 ```
+
+## Number of trips per day
+<!-- cnttdhh count of hh trips on travel day from households. -->
+<!-- cnttdtr count of person trips on travel day from persons. -->
+<!-- sameplc reason for no trips -->
 
 ## Trip Purpose
 <!--- trip purpose summary: Whytrip1s --->
@@ -62,8 +72,6 @@ clean_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), prmact)
 
 ```{r trip.miles}
 # stat summary of trip distance by work status
-summary_nhts(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), trpmiles, worker, "Trip Distance")
-
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
   nhts2_stat_summary(trpmiles, worker)
 ```
@@ -78,18 +86,21 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
 ```
 
 ```{r boxplot.minutes}
+# I could get a third variable in the boxplot.
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
   group_by(Ability) %>%
   filter(worker > 0,
-         trvlcmin > 0) %>%
+         trvlcmin > 0,
+         r_sex > 0) %>%
   as_factor() %>%
   mutate(trvlcmin = as.double(trvlcmin)) %>%
-  ggplot(aes(x = worker, y = trvlcmin, fill = Ability)) +
-  geom_boxplot(position = position_dodge(1))
+  ggplot(aes(x = r_sex, y = trvlcmin, fill = Ability)) +
+  geom_boxplot(position = position_dodge(1)) +
+  facet_wrap(~worker)
 
 # test the function
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
-  nhts2_boxplot(trvlcmin, r_sex)
+  nhts2_boxplot(trvlcmin, worker)
 
 ```
 

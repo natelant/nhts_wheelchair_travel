@@ -185,18 +185,21 @@ nhts2_boxplot <- function(data, by_var, by_var_qual, title = NULL, subtitle = NU
                                      hjust = 1,
                                      vjust = 1))
   
-  #plot %>% ggplotly()
+  return(plot)
+  
+  #plot %>% ggplotly(tooltip = c("x", "y", "fill"))
   
 }
 
 
 
-# Barplot from plotly (qualitative data) NOT WORKING YET
+# Barplot from plotly (qualitative data) 
 
 nhts_barplot2 <- function(data, by_var, facet_var, title, subtitle = NULL, xlab = NULL, ylab = NULL){ 
   
   quote_var <- enquo(by_var)
   facet_quote <- enquo(facet_var)
+  facet_quote1 <- enexpr(facet_quote)
   
   table <- data %>% group_by(!!facet_quote, Ability, !!quote_var) %>% 
     filter(!!facet_quote > 0,
@@ -214,10 +217,10 @@ nhts_barplot2 <- function(data, by_var, facet_var, title, subtitle = NULL, xlab 
                                      angle = 45,
                                      hjust = 1,
                                      vjust = 1)) + 
-    facet_wrap(~ !!as_label(facet_quote))                         ## THis is giving errors
+    facet_wrap(facet_quote)                        
   #scale_x_discrete(labels = abbreviate)
   
-  
+  #return(plot)
   plot %>% ggplotly(tooltip = c("x", "y", "fill"))
   
 }  
