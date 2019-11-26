@@ -21,22 +21,15 @@ source("R/output_functions.R")
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r setup.trips, include=F}
-nhts_trips %>% View()
-nhts_persons %>% View()
-
-nhts_trips %>% left_join(nhts_persons, by = c("houseid", "personid")) %>% View()
-
-```
-
 
 ## Mode Choice
+Below is the distribution of all modes choices and compared by ability. 
 
 ```{r mode.choice}
 # Distribution of trips by mode
 # new functions
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), age1 = 18, age2 = 65) %>%
-  nhts_barplot(trptrans, "Distribution of trips by mode")
+  nhts_barplot(trptrans, "Distribution of trips by mode") 
 
 
 ```
@@ -47,11 +40,17 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), age1 = 
 ```{r activity}
 # Distribution of weekly activities
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
+  nhts_barplot(prmact, "Distribution of Weekly Activities")
+
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
   nhts_distribution(prmact)
              
 
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
-  nhts_barplot(prmact, "Distribution of Primary Activity in the previous week")
+  nhts2_barplot(prmact, worker, "Distribution of Primary Activity by Worker Status")
+
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
+  nhts2_barplot(prmact, worker, "Distribution of Primary Activity by Education Level")
 
 
 ```
@@ -59,10 +58,25 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65)
 ## Number of trips per day
 <!-- cnttdhh count of hh trips on travel day from households. -->
 <!-- cnttdtr count of person trips on travel day from persons. -->
-<!-- sameplc reason for no trips -->
+
+```{r trip.number, echo=F}
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
+  nhts_boxplot(cnttdtr)
+
+
+```
+
+<!-- sameplc reason for no trips NOT WORKING-->
+
 
 ## Trip Purpose
 <!--- trip purpose summary: Whytrip1s --->
+```{r trip.purpose, echo=F}
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
+  nhts2_barplot(whytrp1s, worker, "Trip Purpose by Worker Status")
+
+
+```
 
 <!--- trip origin purpose: whyfrom --->
 <!--- trip destination purpose: whyto --->
@@ -73,7 +87,15 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65)
 ```{r trip.miles}
 # stat summary of trip distance by work status
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
-  nhts2_stat_summary(trpmiles, worker)
+  nhts_stat_summary(trpmiles)
+
+```
+
+```{r trip.boxplot}
+# stat summary of trip distance by work status
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
+  nhts2_boxplot(trpmiles, trptrans, worker, title = "Comparison of Trip Distance by Worker Status and mode")
+
 ```
 
 ## Trip Duration in Minutes
@@ -86,17 +108,6 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
 ```
 
 ```{r boxplot.minutes}
-# I could get a third variable in the boxplot.
-nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
-  group_by(Ability) %>%
-  filter(worker > 0,
-         trvlcmin > 0,
-         r_sex > 0) %>%
-  as_factor() %>%
-  mutate(trvlcmin = as.double(trvlcmin)) %>%
-  ggplot(aes(x = r_sex, y = trvlcmin, fill = Ability)) +
-  geom_boxplot(position = position_dodge(1)) +
-  facet_wrap(~worker)
 
 # test the function
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
@@ -107,13 +118,25 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
 ## Number of Drivers in Household
 <!--- drvrcnt -->
 
+```{r drivers.number}
+nhts_clean(nhts_persons, nhts_households, join_by = "houseid") %>%
+  nhts_barplot(drvrcnt)
+
+```
+
 ## Number of Household Vehicles
 <!--- HHVehcnt (might need to blend hh and pers data) --->
 
 ## Trip distance in miles for personally driven vehicle trips
 <!--- VMT_MILE responses 0-5441 --->
 
+```{r boxplot.personal.miles, echo = F}
 
+# test the function
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
+  nhts2_boxplot(vmt_mile, prmact, worker, "Distribution of Personally Driven Miles by worker group and primary activity")
+
+```
 
 
 

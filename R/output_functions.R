@@ -57,7 +57,7 @@ nhts_distribution <- function(data, by_var, fill = Distribution){
 
 
 # Barplot from plotly (1 variable)
-nhts_barplot <- function(data, x_var, title, subtitle = NULL, xlab = NULL, ylab = NULL){
+nhts_barplot <- function(data, x_var, title = NULL, subtitle = NULL, xlab = NULL, ylab = NULL){
   
   quote_varx <- enquo(x_var)
   #quote_vary <- enquo(y_var)
@@ -181,7 +181,7 @@ nhts2_boxplot <- function(data, by_var, by_var_x, by_var_facet, title = NULL, su
     geom_boxplot(position = position_dodge(1)) +
     ggtitle(title, subtitle) +
     labs(x = xlab, y = ylab) +
-    scale_fill_brewer(palette = "PuBuGn", direction = 2) + 
+    scale_fill_brewer(palette = "PuBuGn", direction = 1) + 
     theme(axis.text.x = element_text(size  = 10, 
                                      angle = 45,
                                      hjust = 1,
@@ -196,11 +196,10 @@ nhts2_boxplot <- function(data, by_var, by_var_x, by_var_facet, title = NULL, su
 
 # Barplot from plotly (qualitative data) 
 
-nhts_barplot2 <- function(data, by_var, facet_var, title, subtitle = NULL, xlab = NULL, ylab = NULL){ 
+nhts2_barplot <- function(data, by_var, facet_var, title = NULL, subtitle = NULL, xlab = NULL, ylab = NULL){ 
   
   quote_var <- enquo(by_var)
   facet_quote <- enquo(facet_var)
-  facet_quote1 <- enexpr(facet_quote)
   
   table <- data %>% group_by(!!facet_quote, Ability, !!quote_var) %>% 
     filter(!!facet_quote > 0,
