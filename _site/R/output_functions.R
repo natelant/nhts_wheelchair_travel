@@ -15,8 +15,7 @@ nhts_clean <- function(data1, data2, join_by, age1 = 18, age2 = 65){
   
   
   data1 %>% left_join(data2, by = join_by) %>%
-    mutate(hhpersonid = paste(houseid, personid, sep = "-"),
-           Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
+    mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
                                medcond6 == "02" | medcond6 == "03" ~ "Disabled",  
                                medcond == "02" ~ "Abled")) %>% 
     filter(r_age >= age1 & r_age < age2,

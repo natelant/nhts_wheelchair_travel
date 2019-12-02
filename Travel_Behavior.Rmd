@@ -67,7 +67,35 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65)
 ```
 
 <!-- sameplc reason for no trips NOT WORKING-->
+```{r trip.reason, echo=F}
+nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
+  nhts_barplot(sameplc)
+ # above is not working. lets try it manually
+table1 <- nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
+    group_by(worker, Ability, sameplc) %>% 
+    filter(sameplc > 0,
+           worker > 0) %>%
+    summarise(Population = sum(wtperfin)) %>%
+    as_factor() %>%
+    mutate(Distribution = Population/sum(Population))
+  
+  plot1 <- ggplot(table1, aes(x = sameplc, y = Distribution)) + 
+    geom_col(aes(fill = Ability), colour = "Black", position = "dodge") +
+    #ggtitle(title, subtitle) +
+    #labs(x = xlab, y = ylab) +
+    scale_fill_brewer(palette = "PuBuGn", direction = 2) + 
+    theme(axis.text.x = element_text(size  = 10, 
+                                     angle = 45,
+                                     hjust = 1,
+                                     vjust = 1)) + 
+    facet_wrap(~worker)                        
+  #scale_x_discrete(labels = abbreviate)
+  
+  #return(plot)
+  plot1 %>% ggplotly(tooltip = c("x", "y", "fill"))
 
+
+```
 
 ## Trip Purpose
 <!--- trip purpose summary: Whytrip1s --->
