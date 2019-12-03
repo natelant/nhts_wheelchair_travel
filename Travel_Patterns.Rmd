@@ -81,17 +81,17 @@ joined_grid_trips <- new_trips %>% right_join(new_grid) %>%
 
   # pipe into the histogram
 plot <-  ggplot(joined_grid_trips, aes(x = n)) + 
-  geom_histogram(aes(y = stat(width*density), fill = trippurp), colour = "black", size = .1, position = "dodge") +
-    ggtitle(NULL, NULL) +
-    labs(x = NULL, y = NULL) +
-    scale_fill_brewer(palette = "Paired", direction = 1) + 
+  geom_histogram(aes(y = stat(width*density), fill = Ability), binwidth = 0.8, colour = "black", size = .1, position = "dodge") +
+    ggtitle("Comparing the number of trips by trip purpose and worker status", "01 = Employed and 02 = Unemployed") +
+    labs(x = "Number of Trips", y = "Percent of subgroup population") +
+    scale_fill_brewer(palette = "PuBuGn", direction = 1) + 
     theme(axis.text.x = element_text(size  = 10, 
                                      angle = 45,
                                      hjust = 1,
                                      vjust = 1)) +
-    scale_x_continuous(limits = c(0, 10)) +
+    scale_x_continuous(limits = c(0, 10), breaks = seq(0, 10, 1)) +
     scale_y_continuous(labels = percent_format()) +
-    facet_grid(worker ~ Ability)
+    facet_grid(worker ~ trippurp, scales = "free_x")
   
   plot %>% ggplotly(tooltip = c("x", "y", "fill")) %>% layout(boxmode = "group")
 
