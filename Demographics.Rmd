@@ -199,4 +199,3 @@ clean_nhts(nhts_persons, nhts_households, "houseid", r_race) %>%
 ## Personal Opinion of Personal Health
 <!---  --->
 
-##

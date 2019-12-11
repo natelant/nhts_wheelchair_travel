@@ -62,13 +62,15 @@ nhts_persons <- nhts_persons %>% mutate(hhpersonid = paste(houseid, personid, se
                                                             medcond == "02" ~ "Abled")) %>% 
     filter(r_age >= 18 & r_age < 65,
            Ability != "NA",
-           worker != "NA")
+           worker > 0)
 
 new_trips <- nhts_trips %>% mutate(hhpersonid = paste(houseid, personid, sep = "-")) %>%
   filter(hhpersonid %in% nhts_persons$hhpersonid) %>%
   group_by(hhpersonid, trippurp) %>%
   tally()   # I don't think I need to tally because the histogram will do that for me.
 
+
+# builds the grid
 new_grid <- expand_grid(hhpersonid = unique(new_trips$hhpersonid), trippurp = unique(new_trips$trippurp)) %>%
   filter(trippurp != "-9")
 
@@ -82,7 +84,7 @@ joined_grid_trips <- new_trips %>% right_join(new_grid) %>%
   # pipe into the histogram
 plot <-  ggplot(joined_grid_trips, aes(x = n)) + 
   geom_histogram(aes(y = stat(width*density), fill = Ability), binwidth = 0.8, colour = "black", size = .1, position = "dodge") +
-    ggtitle("Comparing the number of trips by trip purpose and worker status", "01 = Employed and 02 = Unemployed") +
+    ggtitle("Comparing the number of trips by trip purpose and worker status", subtitle = "01 = Employed and 02 = Unemployed") +
     labs(x = "Number of Trips", y = "Percent of subgroup population") +
     scale_fill_brewer(palette = "PuBuGn", direction = 1) + 
     theme(axis.text.x = element_text(size  = 10, 
