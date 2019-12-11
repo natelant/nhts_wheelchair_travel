@@ -38,7 +38,7 @@ $$ abledpercentage = \frac{counts}{abledpopulation} $$
 ### What percent of the respondants use a wheelchair?
 Of the U.S. population, it is reported that only ____ percent use wheelchairs. This is approximately ___ hundered americans.
 
-```{r population.wheelchair}
+```{r population.wheelchair, echo=F}
 # Create a variable that defines "Ability" as "Abled", "Disabled", or "Wheelchair"
 nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
   mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
@@ -54,6 +54,7 @@ nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
 
 ```
 
+Because there are so few wheelchair users that reported their travel in the 2017 NHTS, we cannot group by state in this analysis.
 ```{r validate, include=F}
 # validate with disabled popoulation
 nhts_persons %>%
@@ -65,7 +66,7 @@ nhts_persons %>%
 ### Population by Age
 Let's look at how wheelchair users are distributed by age. This can be confusing as it looks like there are more wheelchair users than abled bodies at age 75, but remember it is distribution of wheelchair users to total wheelchair users.
 
-```{r population.age}
+```{r population.age, echo=F}
 # build bar chart with age zones %>% into my plotly_bar_nhts function not filtered by age
 nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
   mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
@@ -88,20 +89,17 @@ nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
   mutate(Distribution = population/sum(population)) %>%
   plotly_bar_nhts_ut(Age, Distribution, "Distribution of Age")
 
-# clean the age data filtered by age. no age groups. not comparing utah
-clean_nhts(nhts_persons, nhts_households, join_by = "houseid", r_age) %>%
-  plotly_bar_nhts(r_age, Distribution, "Distribution by Age (18-64)")
 ```
 
 
-```{r population.boxplot, warnings=F}
+```{r population.boxplot, echo=F, warnings=F}
 # Show boxplot of age distribution with age on y axis and wheelchair boolean on the x
 nhts_persons %>%
   mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
                              medcond6 == "02" | medcond6 == "03" ~ "Disabled",
                              medcond == "02" ~ "Abled")) %>%
-  group_by(Ability, r_age, r_sex) %>%
   filter(r_age > 0, Ability != "NA") %>%
+  #group_by(Ability, r_age, r_sex) %>%
   ggplot(aes(x = Ability, y = r_age)) + geom_boxplot(aes(color = r_sex)) +
   stat_compare_means(aes(group = r_sex))
   
