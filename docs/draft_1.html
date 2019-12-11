@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Nate Lant" />
+
+
+<title>draft_1</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">WAV</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Demographics.html">Demographics</a>
+</li>
+<li>
+  <a href="Travel_Behavior.html">Travel Behavior</a>
+</li>
+<li>
+  <a href="Travel_Patterns.html">Travel Patterns</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">draft_1</h1>
+<h4 class="author">Nate Lant</h4>
+<h4 class="date">11/8/2019</h4>
+
+</div>
+
+
+<p>While it is reported that there are 25 million americans with disabilities, only __________ percent of them use a wheelchair</p>
+<pre class="r"><code># household income distribution 
+nhts_persons %&gt;%
+  left_join(nhts_households, by = &quot;houseid&quot;) %&gt;%
+  mutate(wheelchair = ifelse(w_chair == &quot;07&quot; | w_mtrchr == &quot;08&quot;, TRUE, FALSE)) %&gt;%
+  group_by(wheelchair, hhfaminc) %&gt;% 
+  tally() %&gt;%
+  filter(hhfaminc &gt; 0) %&gt;%
+  spread(wheelchair, n, fill = 0)   # it would also be cool to figure out the weighted portions to get full count histograms.</code></pre>
+<pre><code>## # A tibble: 11 x 3
+##    hhfaminc                  `FALSE` `TRUE`
+##    &lt;chr+lbl&gt;                   &lt;dbl&gt;  &lt;dbl&gt;
+##  1 01 [Less than $10,000]      10013    383
+##  2 02 [$10,000 to $14,999]      9644    386
+##  3 03 [$15,000 to $24,999]     18560    477
+##  4 04 [$25,000 to $34,999]     21335    450
+##  5 05 [$35,000 to $49,999]     28764    458
+##  6 06 [$50,000 to $74,999]     45076    484
+##  7 07 [$75,000 to $99,999]     36545    232
+##  8 08 [$100,000 to $124,999]   29851    175
+##  9 09 [$125,000 to $149,999]   17170     74
+## 10 10 [$150,000 to $199,999]   17360     78
+## 11 11 [$200,000 or more]       18671     73</code></pre>
+<pre class="r"><code># worker status yes or no
+nhts_persons %&gt;% 
+  filter(r_age &gt; 18 &amp; r_age &lt; 64) %&gt;%
+  mutate(wheelchair = ifelse(w_chair == &quot;07&quot; | w_mtrchr == &quot;08&quot;, TRUE, FALSE)) %&gt;%
+  group_by(wheelchair, worker) %&gt;% 
+  tally() %&gt;%
+  filter(worker &gt; 0) %&gt;%
+  spread(wheelchair, n, fill = 0)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   worker    `FALSE` `TRUE`
+##   &lt;chr+lbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 01 [Yes]   110587    123
+## 2 02 [No]     38039    920</code></pre>
+<pre class="r"><code># using wkftpt full time or part time employment
+nhts_persons %&gt;% 
+  filter(r_age &gt; 18 &amp; r_age &lt; 64) %&gt;%
+  mutate(wheelchair = ifelse(w_chair == &quot;07&quot; | w_mtrchr == &quot;08&quot;, TRUE, FALSE)) %&gt;%
+  group_by(wheelchair, wkftpt) %&gt;% 
+  tally() %&gt;%
+  filter(wkftpt &gt; 0) %&gt;%
+  spread(wheelchair, n, fill = 0)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   wkftpt         `FALSE` `TRUE`
+##   &lt;chr+lbl&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+## 1 01 [Full-time]   88767     57
+## 2 02 [Part-time]   17633     38</code></pre>
+<pre class="r"><code># HHVEHCNT - count of vehicle per household
+nhts_persons %&gt;%
+  left_join(nhts_households, by = &quot;houseid&quot;) %&gt;%
+  mutate(wheelchair = ifelse(w_chair == &quot;07&quot; | w_mtrchr == &quot;08&quot;, TRUE, FALSE)) %&gt;%
+  group_by(wheelchair, hhvehcnt) %&gt;% 
+  tally() %&gt;%
+  filter(hhvehcnt &gt; 0) %&gt;%
+  spread(wheelchair, n, fill = 0) # How many persons are in these households? and is this counting persons or households?</code></pre>
+<pre><code>## # A tibble: 12 x 3
+##    hhvehcnt `FALSE` `TRUE`
+##       &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+##  1        1   57535   1275
+##  2        2  110502   1004
+##  3        3   51527    407
+##  4        4   21143    161
+##  5        5    7377     51
+##  6        6    2772     24
+##  7        7    1015      5
+##  8        8     413      6
+##  9        9     196      1
+## 10       10      95      2
+## 11       11      48      0
+## 12       12      82      0</code></pre>
+<pre class="r"><code># VEHOWNED - Own vehicle longer than one year (can&#39;t find a more straightforward vehicle ownership variable)
+nhts_persons %&gt;%
+  left_join(nhts_vehicles, by = &quot;houseid&quot;) %&gt;%
+  mutate(wheelchair = ifelse(w_chair == &quot;07&quot; | w_mtrchr == &quot;08&quot;, TRUE, FALSE)) %&gt;%
+  group_by(wheelchair, vehowned) %&gt;% 
+  tally() %&gt;%
+  filter(vehowned &gt; 0) %&gt;%
+  spread(wheelchair, n, fill = 0) # how do we get more than 3410 wheelchair?</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   vehowned  `FALSE` `TRUE`
+##   &lt;chr+lbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 01 [Yes]   497628   4856
+## 2 02 [No]     86725    683</code></pre>
+<pre class="r"><code>#here is to try to extract the labels in the variable column
+nhts_persons %&gt;%
+  left_join(nhts_households, by = &quot;houseid&quot;) %&gt;%
+  mutate(wheelchair = ifelse(w_chair == &quot;07&quot; | w_mtrchr == &quot;08&quot;, TRUE, FALSE)) %&gt;%
+  group_by(wheelchair, r_race) %&gt;% 
+  tally()</code></pre>
+<pre><code>## # A tibble: 17 x 3
+## # Groups:   wheelchair [2]
+##    wheelchair r_race                                              n
+##    &lt;lgl&gt;      &lt;chr+lbl&gt;                                       &lt;int&gt;
+##  1 FALSE      -7 [Refused]                                     1173
+##  2 FALSE      -8 [Don&#39;t know]                                   264
+##  3 FALSE      01 [White]                                     211551
+##  4 FALSE      02 [Black or African American]                  19043
+##  5 FALSE      03 [Asian]                                      11989
+##  6 FALSE      04 [American Indian or Alaska Native]            1676
+##  7 FALSE      05 [Native Hawaiian or other Pacific Islander]    625
+##  8 FALSE      06 [Multiple responses selected]                 8387
+##  9 FALSE      97 [Some other race]                             6116
+## 10 TRUE       -7 [Refused]                                       15
+## 11 TRUE       01 [White]                                       2686
+## 12 TRUE       02 [Black or African American]                    383
+## 13 TRUE       03 [Asian]                                         75
+## 14 TRUE       04 [American Indian or Alaska Native]              45
+## 15 TRUE       05 [Native Hawaiian or other Pacific Islander]     11
+## 16 TRUE       06 [Multiple responses selected]                  103
+## 17 TRUE       97 [Some other race]                               92</code></pre>
+<pre class="r"><code>nhts_persons %&gt;%
+  left_join(nhts_households, by = &quot;houseid&quot;) %&gt;%
+  mutate(wheelchair = ifelse(w_chair == &quot;07&quot; | w_mtrchr == &quot;08&quot;, TRUE, FALSE)) %&gt;%
+  group_by(wheelchair, r_race) %&gt;% 
+  tally() %&gt;% as_factor()</code></pre>
+<pre><code>## # A tibble: 17 x 3
+## # Groups:   wheelchair [2]
+##    wheelchair r_race                                         n
+##    &lt;lgl&gt;      &lt;fct&gt;                                      &lt;int&gt;
+##  1 FALSE      Refused                                     1173
+##  2 FALSE      Don&#39;t know                                   264
+##  3 FALSE      White                                     211551
+##  4 FALSE      Black or African American                  19043
+##  5 FALSE      Asian                                      11989
+##  6 FALSE      American Indian or Alaska Native            1676
+##  7 FALSE      Native Hawaiian or other Pacific Islander    625
+##  8 FALSE      Multiple responses selected                 8387
+##  9 FALSE      Some other race                             6116
+## 10 TRUE       Refused                                       15
+## 11 TRUE       White                                       2686
+## 12 TRUE       Black or African American                    383
+## 13 TRUE       Asian                                         75
+## 14 TRUE       American Indian or Alaska Native              45
+## 15 TRUE       Native Hawaiian or other Pacific Islander     11
+## 16 TRUE       Multiple responses selected                  103
+## 17 TRUE       Some other race                               92</code></pre>
+<pre class="r"><code># how to get utah by itself
+nhts_persons %&gt;% left_join(nhts_households, by = &quot;houseid&quot;) %&gt;%
+    mutate(Ability = case_when(w_chair == &quot;07&quot; | w_mtrchr == &quot;08&quot; ~ &quot;Wheelchair&quot;,
+                               medcond6 == &quot;02&quot; | medcond6 == &quot;03&quot; ~ &quot;Disabled&quot;,
+                               medcond == &quot;02&quot; ~ &quot;Abled&quot;),
+           UT = ifelse(hhstfips == &quot;49&quot;, TRUE, FALSE))  %&gt;%          
+    group_by(Ability, r_sex, UT) %&gt;% 
+    filter(Ability != &quot;NA&quot;,
+           r_sex &gt; 0) %&gt;%
+    summarise(Survey = n(),
+              Population = sum(wtperfin)) %&gt;%
+    as_factor() %&gt;%
+    mutate(Distribution = Population/sum(Population))</code></pre>
+<pre><code>## # A tibble: 12 x 6
+## # Groups:   Ability, r_sex [6]
+##    Ability    r_sex  UT    Survey Population Distribution
+##    &lt;chr&gt;      &lt;fct&gt;  &lt;lgl&gt;  &lt;int&gt;      &lt;dbl&gt;        &lt;dbl&gt;
+##  1 Abled      Male   FALSE 113849 135300116.      0.988  
+##  2 Abled      Male   TRUE     361   1629177.      0.0119 
+##  3 Abled      Female FALSE 124103 137245125.      0.989  
+##  4 Abled      Female TRUE     374   1458359.      0.0105 
+##  5 Disabled   Male   FALSE   8455   8744947.      0.994  
+##  6 Disabled   Male   TRUE      12     48848.      0.00555
+##  7 Disabled   Female FALSE  11471  11359965.      0.990  
+##  8 Disabled   Female TRUE      28    115428.      0.0101 
+##  9 Wheelchair Male   FALSE   1260   1380755.      0.993  
+## 10 Wheelchair Male   TRUE       2     10213.      0.00734
+## 11 Wheelchair Female FALSE   2144   2204819.      0.996  
+## 12 Wheelchair Female TRUE       4      9435.      0.00426</code></pre>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

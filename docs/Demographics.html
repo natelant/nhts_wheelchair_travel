@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Nate Lant" />
+
+<meta name="date" content="2019-11-19" />
+
+<title>Demographics</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.9.1/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.0.0/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.0.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-1.49.4/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-1.49.4/plotly-latest.min.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">WAV</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Demographics.html">Demographics</a>
+</li>
+<li>
+  <a href="Travel_Behavior.html">Travel Behavior</a>
+</li>
+<li>
+  <a href="Travel_Patterns.html">Travel Patterns</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Demographics</h1>
+<h4 class="author">Nate Lant</h4>
+<h4 class="date">11/19/2019</h4>
+
+</div>
+
+
+<div id="population" class="section level2">
+<h2>Population</h2>
+<p>The purpose of drawing conclusions from the NHTS is to provide better transportation–more accessible, safer, faster, etc.–by understanding the transportation patterns of the U.S. citizens.</p>
+<p>This page will display the information found in the 2017 NHTS and compare the population of wheelchair users to the able-bodied population. <!-- This page also compares the disabled population (those who reported to have a medical condition for longer than six months) in addition to the population of wheelchair users. --></p>
+<p>In this analysis I use the metric of distribution of relative population. For example <span class="math display">\[ wheelchairpercentage = \frac{counts}{wheelchairpopulation} \]</span> <span class="math display">\[ abledpercentage = \frac{counts}{abledpopulation} \]</span></p>
+<div id="what-percent-of-the-respondants-use-a-wheelchair" class="section level3">
+<h3>What percent of the respondants use a wheelchair?</h3>
+<p>Of the U.S. population, it is reported that only ____ percent use wheelchairs. This is approximately ___ hundered americans.</p>
+<table style="width:76%;">
+<colgroup>
+<col width="9%" />
+<col width="18%" />
+<col width="12%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">UT</th>
+<th align="center">Ability</th>
+<th align="center">survey</th>
+<th align="center">population</th>
+<th align="center">dist.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">U.S.</td>
+<td align="center">Abled</td>
+<td align="center">238184</td>
+<td align="center">272892889</td>
+<td align="center">0.9201</td>
+</tr>
+<tr class="even">
+<td align="center">U.S.</td>
+<td align="center">Disabled</td>
+<td align="center">19934</td>
+<td align="center">20112667</td>
+<td align="center">0.06781</td>
+</tr>
+<tr class="odd">
+<td align="center">U.S.</td>
+<td align="center">Wheelchair</td>
+<td align="center">3404</td>
+<td align="center">3585575</td>
+<td align="center">0.01209</td>
+</tr>
+<tr class="even">
+<td align="center">Utah</td>
+<td align="center">Abled</td>
+<td align="center">735</td>
+<td align="center">3087536</td>
+<td align="center">0.9438</td>
+</tr>
+<tr class="odd">
+<td align="center">Utah</td>
+<td align="center">Disabled</td>
+<td align="center">40</td>
+<td align="center">164276</td>
+<td align="center">0.05022</td>
+</tr>
+<tr class="even">
+<td align="center">Utah</td>
+<td align="center">Wheelchair</td>
+<td align="center">6</td>
+<td align="center">19648</td>
+<td align="center">0.006006</td>
+</tr>
+</tbody>
+</table>
+<p>Because there are so few wheelchair users that reported their travel in the 2017 NHTS, we cannot group by state in this analysis.</p>
+</div>
+<div id="population-by-age" class="section level3">
+<h3>Population by Age</h3>
+<p>Let’s look at how wheelchair users are distributed by age. This can be confusing as it looks like there are more wheelchair users than abled bodies at age 75, but remember it is distribution of wheelchair users to total wheelchair users.</p>
+<div id="htmlwidget-b107539a2a796e74c8c3" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b107539a2a796e74c8c3">{"x":{"data":[{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.299999999999999,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[0.7,1.7,2.7,3.7,4.7,5.7,6.7,7.7,8.7,9.7,10.7],"y":[0.0722444718675758,0.150884174377851,0.144356357532103,0.157161869460519,0.134089550220613,0.139993884673061,0.121414832270083,0.0570803328110158,0.0170733507986406,0.00338444179044765,0.00231673419808994],"text":["Ability: Abled<br />Age: 0 - 10<br />Distribution: 0.072244472","Ability: Abled<br />Age: 10 - 20<br />Distribution: 0.150884174","Ability: Abled<br />Age: 20 - 30<br />Distribution: 0.144356358","Ability: Abled<br />Age: 30 - 40<br />Distribution: 0.157161869","Ability: Abled<br />Age: 40 - 50<br />Distribution: 0.134089550","Ability: Abled<br />Age: 50 - 60<br />Distribution: 0.139993885","Ability: Abled<br />Age: 60 - 70<br />Distribution: 0.121414832","Ability: Abled<br />Age: 70 - 80<br />Distribution: 0.057080333","Ability: Abled<br />Age: 80 - 90<br />Distribution: 0.017073351","Ability: Abled<br />Age: 90 - 100<br />Distribution: 0.003384442","Ability: Abled<br />Age: NA<br />Distribution: 0.002316734"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.9,0.45,0.45,0.3,0.449999999999999,0.300000000000001,0.449999999999999,0.299999999999999,0.300000000000001,0.449999999999999],"base":[0,0,0,0,0,0,0,0,0,0],"x":[1,1.775,2.775,3.7,4.775,5.7,6.775,7.7,8.7,9.775],"y":[0.104381438527736,0.207941503855103,0.165394000495347,0.138413279876617,0.143610143127274,0.104931547786863,0.074143205842439,0.0422085637088965,0.0179391874993405,0.00103712928038421],"text":["Ability: Abled<br />Age: 0 - 10<br />Distribution: 0.104381439","Ability: Abled<br />Age: 10 - 20<br />Distribution: 0.207941504","Ability: Abled<br />Age: 20 - 30<br />Distribution: 0.165394000","Ability: Abled<br />Age: 30 - 40<br />Distribution: 0.138413280","Ability: Abled<br />Age: 40 - 50<br />Distribution: 0.143610143","Ability: Abled<br />Age: 50 - 60<br />Distribution: 0.104931548","Ability: Abled<br />Age: 60 - 70<br />Distribution: 0.074143206","Ability: Abled<br />Age: 70 - 80<br />Distribution: 0.042208564","Ability: Abled<br />Age: 80 - 90<br />Distribution: 0.017939187","Ability: Abled<br />Age: 90 - 100<br />Distribution: 0.001037129"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8,9,10,11],"y":[0.00911315453423247,0.0367207026893496,0.0651860110153056,0.0563154569831679,0.0904805440365583,0.205354245854595,0.239133331337477,0.160266344639652,0.0992142163899138,0.0362069358960293,0.0020090566237196],"text":["Ability: Disabled<br />Age: 0 - 10<br />Distribution: 0.009113155","Ability: Disabled<br />Age: 10 - 20<br />Distribution: 0.036720703","Ability: Disabled<br />Age: 20 - 30<br />Distribution: 0.065186011","Ability: Disabled<br />Age: 30 - 40<br />Distribution: 0.056315457","Ability: Disabled<br />Age: 40 - 50<br />Distribution: 0.090480544","Ability: Disabled<br />Age: 50 - 60<br />Distribution: 0.205354246","Ability: Disabled<br />Age: 60 - 70<br />Distribution: 0.239133331","Ability: Disabled<br />Age: 70 - 80<br />Distribution: 0.160266345","Ability: Disabled<br />Age: 80 - 90<br />Distribution: 0.099214216","Ability: Disabled<br />Age: 90 - 100<br />Distribution: 0.036206936","Ability: Disabled<br />Age: NA<br />Distribution: 0.002009057"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.45,0.45,0.3,0.449999999999999,0.300000000000001,0.449999999999999,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0],"x":[2.225,3.225,4,5.225,6,7.225,8,9],"y":[0.218432951715479,0.0808985647831772,0.0682106203094155,0.136121948469883,0.0476314313941327,0.272046124363273,0.0927417180084426,0.0839166409561976],"text":["Ability: Disabled<br />Age: 10 - 20<br />Distribution: 0.218432952","Ability: Disabled<br />Age: 20 - 30<br />Distribution: 0.080898565","Ability: Disabled<br />Age: 30 - 40<br />Distribution: 0.068210620","Ability: Disabled<br />Age: 40 - 50<br />Distribution: 0.136121948","Ability: Disabled<br />Age: 50 - 60<br />Distribution: 0.047631431","Ability: Disabled<br />Age: 60 - 70<br />Distribution: 0.272046124","Ability: Disabled<br />Age: 70 - 80<br />Distribution: 0.092741718","Ability: Disabled<br />Age: 80 - 90<br />Distribution: 0.083916641"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[1.3,2.3,3.3,4.3,5.3,6.3,7.3,8.3,9.3,10.3,11.3],"y":[0.0121441619165236,0.0196384965078851,0.0522390605723064,0.0461378529384528,0.0590055991421941,0.11375130139011,0.24327133089422,0.196509234692482,0.159348281841381,0.0951198973858448,0.00283478271859931],"text":["Ability: Wheelchair<br />Age: 0 - 10<br />Distribution: 0.012144162","Ability: Wheelchair<br />Age: 10 - 20<br />Distribution: 0.019638497","Ability: Wheelchair<br />Age: 20 - 30<br />Distribution: 0.052239061","Ability: Wheelchair<br />Age: 30 - 40<br />Distribution: 0.046137853","Ability: Wheelchair<br />Age: 40 - 50<br />Distribution: 0.059005599","Ability: Wheelchair<br />Age: 50 - 60<br />Distribution: 0.113751301","Ability: Wheelchair<br />Age: 60 - 70<br />Distribution: 0.243271331","Ability: Wheelchair<br />Age: 70 - 80<br />Distribution: 0.196509235","Ability: Wheelchair<br />Age: 80 - 90<br />Distribution: 0.159348282","Ability: Wheelchair<br />Age: 90 - 100<br />Distribution: 0.095119897","Ability: Wheelchair<br />Age: NA<br />Distribution: 0.002834783"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.449999999999999],"base":[0,0,0,0,0],"x":[4.3,6.3,8.3,9.3,10.225],"y":[0.422261856360434,0.128419840683006,0.131122005028154,0.0473903172455179,0.270805980682888],"text":["Ability: Wheelchair<br />Age: 30 - 40<br />Distribution: 0.422261856","Ability: Wheelchair<br />Age: 50 - 60<br />Distribution: 0.128419841","Ability: Wheelchair<br />Age: 70 - 80<br />Distribution: 0.131122005","Ability: Wheelchair<br />Age: 80 - 90<br />Distribution: 0.047390317","Ability: Wheelchair<br />Age: 90 - 100<br />Distribution: 0.270805981"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":55.4520547945205,"r":7.30593607305936,"b":42.6528258677299,"l":28.4931506849315},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Distribution of Age","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,0.495923026744945],"automargin":true,"type":"linear","autorange":false,"range":[0.4,11.6],"tickmode":"array","ticktext":["0 - 10","10 - 20","20 - 30","30 - 40","40 - 50","50 - 60","60 - 70","70 - 80","80 - 90","90 - 100",null],"tickvals":[1,2,3,4,5,6,7,8,9,10,11],"categoryorder":"array","categoryarray":["0 - 10","10 - 20","20 - 30","30 - 40","40 - 50","50 - 60","60 - 70","70 - 80","80 - 90","90 - 100",null],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.0211130928180217,0.443374949178456],"tickmode":"array","ticktext":["0.0","0.1","0.2","0.3","0.4"],"tickvals":[0,0.1,0.2,0.3,0.4],"categoryorder":"array","categoryarray":["0.0","0.1","0.2","0.3","0.4"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.495923026744945,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.495923026744945,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.504076973255055,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.504076973255055,"x1":1,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"}],"annotations":[{"text":"U.S.","x":0.247961513372472,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Utah","x":0.752038486627528,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Ability","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"xaxis2":{"type":"linear","autorange":false,"range":[0.4,11.6],"tickmode":"array","ticktext":["0 - 10","10 - 20","20 - 30","30 - 40","40 - 50","50 - 60","60 - 70","70 - 80","80 - 90","90 - 100",null],"tickvals":[1,2,3,4,5,6,7,8,9,10,11],"categoryorder":"array","categoryarray":["0 - 10","10 - 20","20 - 30","30 - 40","40 - 50","50 - 60","60 - 70","70 - 80","80 - 90","90 - 100",null],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.504076973255055,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96751968503937},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10b24726c11e2":{"fill":{},"x":{},"y":{},"type":"bar"}},"cur_data":"10b24726c11e2","visdat":{"10b24726c11e2":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<!--- I deleted the age boxplot here --->
+</div>
+</div>
+<div id="income" class="section level2">
+<h2>Income</h2>
+<p><div id="htmlwidget-3ce72e6bc04beb739ed5" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3ce72e6bc04beb739ed5">{"x":{"data":[{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.299999999999999,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[0.7,1.7,2.7,3.7,4.7,5.7,6.7,7.7,8.7,9.7,10.7],"y":[0.0506349531127712,0.037093641322035,0.0693830020527257,0.080794293677884,0.110950368454374,0.171007846997615,0.141990488611887,0.119310913772437,0.072845028820703,0.0713287608813081,0.0746607022962608],"text":["Ability: Abled<br />hhfaminc: Less than $10,000<br />Distribution: 0.050634953","Ability: Abled<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.037093641","Ability: Abled<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.069383002","Ability: Abled<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.080794294","Ability: Abled<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.110950368","Ability: Abled<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.171007847","Ability: Abled<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.141990489","Ability: Abled<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.119310914","Ability: Abled<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.072845029","Ability: Abled<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.071328761","Ability: Abled<br />hhfaminc: $200,000 or more<br />Distribution: 0.074660702"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8,9,10,11],"y":[0.220763147688031,0.133056305194792,0.167601466034102,0.121606187249339,0.112426346136237,0.0902690954693557,0.0707107995947438,0.0370149346579218,0.0181682384549545,0.0151138971838984,0.0132695823366247],"text":["Ability: Disabled<br />hhfaminc: Less than $10,000<br />Distribution: 0.220763148","Ability: Disabled<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.133056305","Ability: Disabled<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.167601466","Ability: Disabled<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.121606187","Ability: Disabled<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.112426346","Ability: Disabled<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.090269095","Ability: Disabled<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.070710800","Ability: Disabled<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.037014935","Ability: Disabled<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.018168238","Ability: Disabled<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.015113897","Ability: Disabled<br />hhfaminc: $200,000 or more<br />Distribution: 0.013269582"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[1.3,2.3,3.3,4.3,5.3,6.3,7.3,8.3,9.3,10.3,11.3],"y":[0.26494232724985,0.161264603512841,0.130021684855666,0.109092123922867,0.104475523363973,0.0737403902732338,0.0608747346001653,0.0574086482979705,0.0192592757157191,0.0146991658427128,0.00422152236500194],"text":["Ability: Wheelchair<br />hhfaminc: Less than $10,000<br />Distribution: 0.264942327","Ability: Wheelchair<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.161264604","Ability: Wheelchair<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.130021685","Ability: Wheelchair<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.109092124","Ability: Wheelchair<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.104475523","Ability: Wheelchair<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.073740390","Ability: Wheelchair<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.060874735","Ability: Wheelchair<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.057408648","Ability: Wheelchair<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.019259276","Ability: Wheelchair<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.014699166","Ability: Wheelchair<br />hhfaminc: $200,000 or more<br />Distribution: 0.004221522"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":84.0105690149678,"l":28.4931506849315},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Distribution of Income","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,11.6],"tickmode":"array","ticktext":["Less than $10,000","$10,000 to $14,999","$15,000 to $24,999","$25,000 to $34,999","$35,000 to $49,999","$50,000 to $74,999","$75,000 to $99,999","$100,000 to $124,999","$125,000 to $149,999","$150,000 to $199,999","$200,000 or more"],"tickvals":[1,2,3,4,5,6,7,8,9,10,11],"categoryorder":"array","categoryarray":["Less than $10,000","$10,000 to $14,999","$15,000 to $24,999","$25,000 to $34,999","$35,000 to $49,999","$50,000 to $74,999","$75,000 to $99,999","$100,000 to $124,999","$125,000 to $149,999","$150,000 to $199,999","$200,000 or more"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.0132471163624925,0.278189443612343],"tickmode":"array","ticktext":["0.0","0.1","0.2"],"tickvals":[0,0.1,0.2],"categoryorder":"array","categoryarray":["0.0","0.1","0.2"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96751968503937},"annotations":[{"text":"Ability","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10b242ecc635e":{"fill":{},"x":{},"y":{},"type":"bar"}},"cur_data":"10b242ecc635e","visdat":{"10b242ecc635e":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script><div id="htmlwidget-b5891d12065c4eea28bc" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b5891d12065c4eea28bc">{"x":{"data":[{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.299999999999999,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[0.7,1.7,2.7,3.7,4.7,5.7,6.7,7.7,8.7,9.7,10.7],"y":[0.0304499804325992,0.0276839650793762,0.0608458384398306,0.0777596353254278,0.112761625526081,0.174848841785169,0.150901505999816,0.129095616330079,0.0789756778028467,0.0779766606829161,0.0787006525958583],"text":["Ability: Abled<br />hhfaminc: Less than $10,000<br />Distribution: 0.030449980","Ability: Abled<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.027683965","Ability: Abled<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.060845838","Ability: Abled<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.077759635","Ability: Abled<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.112761626","Ability: Abled<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.174848842","Ability: Abled<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.150901506","Ability: Abled<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.129095616","Ability: Abled<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.078975678","Ability: Abled<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.077976661","Ability: Abled<br />hhfaminc: $200,000 or more<br />Distribution: 0.078700653"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.299999999999999,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[0.7,1.7,2.7,3.7,4.7,5.7,6.7,7.7,8.7,9.7,10.7],"y":[0.117144433983677,0.0680992757084887,0.0975156323902144,0.0907975780155145,0.104983702331327,0.158361855137497,0.112587056438337,0.0870783522351138,0.0526494671605605,0.0494288456653753,0.0613538009338945],"text":["Ability: Abled<br />hhfaminc: Less than $10,000<br />Distribution: 0.117144434","Ability: Abled<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.068099276","Ability: Abled<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.097515632","Ability: Abled<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.090797578","Ability: Abled<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.104983702","Ability: Abled<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.158361855","Ability: Abled<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.112587056","Ability: Abled<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.087078352","Ability: Abled<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.052649467","Ability: Abled<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.049428846","Ability: Abled<br />hhfaminc: $200,000 or more<br />Distribution: 0.061353801"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8,9,10,11],"y":[0.104879170431981,0.087370621151648,0.12133094897738,0.126588550861225,0.126057596256587,0.14890355473983,0.113016697086476,0.0706854674795446,0.0393994913959883,0.0359055272525165,0.0258623743668234],"text":["Ability: Disabled<br />hhfaminc: Less than $10,000<br />Distribution: 0.104879170","Ability: Disabled<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.087370621","Ability: Disabled<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.121330949","Ability: Disabled<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.126588551","Ability: Disabled<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.126057596","Ability: Disabled<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.148903555","Ability: Disabled<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.113016697","Ability: Disabled<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.070685467","Ability: Disabled<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.039399491","Ability: Disabled<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.035905527","Ability: Disabled<br />hhfaminc: $200,000 or more<br />Distribution: 0.025862374"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7,8,9,10,11],"y":[0.248226192425787,0.143854227664713,0.178559785841232,0.120430859497718,0.109201643295955,0.0763818313594736,0.0606911007959186,0.0290396317038044,0.0131391262751935,0.0101888089039559,0.0102867922362494],"text":["Ability: Disabled<br />hhfaminc: Less than $10,000<br />Distribution: 0.248226192","Ability: Disabled<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.143854228","Ability: Disabled<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.178559786","Ability: Disabled<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.120430859","Ability: Disabled<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.109201643","Ability: Disabled<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.076381831","Ability: Disabled<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.060691101","Ability: Disabled<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.029039632","Ability: Disabled<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.013139126","Ability: Disabled<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.010188809","Ability: Disabled<br />hhfaminc: $200,000 or more<br />Distribution: 0.010286792"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[1.3,2.3,3.3,4.3,5.3,6.3,7.3,8.3,9.3,10.3,11.3],"y":[0.236586962122627,0.0444964650682086,0.086741376695505,0.117829767094067,0.154897356682208,0.0636004298864877,0.122448590745491,0.13622575978749,0.00630298955041925,0.0157510924014944,0.0151192099660019],"text":["Ability: Wheelchair<br />hhfaminc: Less than $10,000<br />Distribution: 0.236586962","Ability: Wheelchair<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.044496465","Ability: Wheelchair<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.086741377","Ability: Wheelchair<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.117829767","Ability: Wheelchair<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.154897357","Ability: Wheelchair<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.063600430","Ability: Wheelchair<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.122448591","Ability: Wheelchair<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.136225760","Ability: Wheelchair<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.006302990","Ability: Wheelchair<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.015751092","Ability: Wheelchair<br />hhfaminc: $200,000 or more<br />Distribution: 0.015119210"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0,0,0,0,0],"x":[1.3,2.3,3.3,4.3,5.3,6.3,7.3,8.3,9.3,10.3,11.3],"y":[0.269068634312648,0.178256844389023,0.136319887698059,0.107820611510039,0.0971380771344221,0.0752159695850358,0.0519144325072028,0.0459390868111282,0.0211446901645066,0.0145460882163246,0.00263567767161084],"text":["Ability: Wheelchair<br />hhfaminc: Less than $10,000<br />Distribution: 0.269068634","Ability: Wheelchair<br />hhfaminc: $10,000 to $14,999<br />Distribution: 0.178256844","Ability: Wheelchair<br />hhfaminc: $15,000 to $24,999<br />Distribution: 0.136319888","Ability: Wheelchair<br />hhfaminc: $25,000 to $34,999<br />Distribution: 0.107820612","Ability: Wheelchair<br />hhfaminc: $35,000 to $49,999<br />Distribution: 0.097138077","Ability: Wheelchair<br />hhfaminc: $50,000 to $74,999<br />Distribution: 0.075215970","Ability: Wheelchair<br />hhfaminc: $75,000 to $99,999<br />Distribution: 0.051914433","Ability: Wheelchair<br />hhfaminc: $100,000 to $124,999<br />Distribution: 0.045939087","Ability: Wheelchair<br />hhfaminc: $125,000 to $149,999<br />Distribution: 0.021144690","Ability: Wheelchair<br />hhfaminc: $150,000 to $199,999<br />Distribution: 0.014546088","Ability: Wheelchair<br />hhfaminc: $200,000 or more<br />Distribution: 0.002635678"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":false,"xaxis":"x2","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":55.4520547945205,"r":7.30593607305936,"b":84.0105690149678,"l":28.4931506849315},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Income by worker status","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,0.495923026744945],"automargin":true,"type":"linear","autorange":false,"range":[0.4,11.6],"tickmode":"array","ticktext":["Less than $10,000","$10,000 to $14,999","$15,000 to $24,999","$25,000 to $34,999","$35,000 to $49,999","$50,000 to $74,999","$75,000 to $99,999","$100,000 to $124,999","$125,000 to $149,999","$150,000 to $199,999","$200,000 or more"],"tickvals":[1,2,3,4,5,6,7,8,9,10,11],"categoryorder":"array","categoryarray":["Less than $10,000","$10,000 to $14,999","$15,000 to $24,999","$25,000 to $34,999","$35,000 to $49,999","$50,000 to $74,999","$75,000 to $99,999","$100,000 to $124,999","$125,000 to $149,999","$150,000 to $199,999","$200,000 or more"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.0134534317156324,0.282522066028281],"tickmode":"array","ticktext":["0.0","0.1","0.2"],"tickvals":[0,0.1,0.2],"categoryorder":"array","categoryarray":["0.0","0.1","0.2"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.495923026744945,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":0.495923026744945,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.504076973255055,"x1":1,"y0":0,"y1":1},{"type":"rect","fillcolor":"rgba(217,217,217,1)","line":{"color":"transparent","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0.504076973255055,"x1":1,"y0":0,"y1":23.37899543379,"yanchor":1,"ysizemode":"pixel"}],"annotations":[{"text":"Yes","x":0.247961513372472,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"No","x":0.752038486627528,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.689497716895},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Ability","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"xaxis2":{"type":"linear","autorange":false,"range":[0.4,11.6],"tickmode":"array","ticktext":["Less than $10,000","$10,000 to $14,999","$15,000 to $24,999","$25,000 to $34,999","$35,000 to $49,999","$50,000 to $74,999","$75,000 to $99,999","$100,000 to $124,999","$125,000 to $149,999","$150,000 to $199,999","$200,000 or more"],"tickvals":[1,2,3,4,5,6,7,8,9,10,11],"categoryorder":"array","categoryarray":["Less than $10,000","$10,000 to $14,999","$15,000 to $24,999","$25,000 to $34,999","$35,000 to $49,999","$50,000 to $74,999","$75,000 to $99,999","$100,000 to $124,999","$125,000 to $149,999","$150,000 to $199,999","$200,000 or more"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.504076973255055,1],"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96751968503937},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10b248a562e0":{"fill":{},"x":{},"y":{},"type":"bar"}},"cur_data":"10b248a562e0","visdat":{"10b248a562e0":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script></p>
+</div>
+<div id="employment" class="section level2">
+<h2>Employment</h2>
+<p>This plot shows the distribution of workers by Ability groups. Looks like there are a lot of wheelchair users unemployed between the ages of 18 and 64. <div id="htmlwidget-8fc82590470fec4b142a" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8fc82590470fec4b142a">{"x":{"data":[{"orientation":"v","width":[0.3,0.3],"base":[0,0],"x":[0.7,1.7],"y":[0.766385618609843,0.233614381390157],"text":["Ability: Abled<br />worker: Yes<br />Distribution: 0.7663856","Ability: Abled<br />worker: No<br />Distribution: 0.2336144"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3],"base":[0,0],"x":[1,2],"y":[0.191287570615788,0.808712429384212],"text":["Ability: Disabled<br />worker: Yes<br />Distribution: 0.1912876","Ability: Disabled<br />worker: No<br />Distribution: 0.8087124"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3],"base":[0,0],"x":[1.3,2.3],"y":[0.124787832770775,0.875212167229225],"text":["Ability: Wheelchair<br />worker: Yes<br />Distribution: 0.1247878","Ability: Wheelchair<br />worker: No<br />Distribution: 0.8752122"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":27.164798671648,"l":48.9497716894977},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Worker Status","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,2.6],"tickmode":"array","ticktext":["Yes","No"],"tickvals":[1,2],"categoryorder":"array","categoryarray":["Yes","No"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.0437606083614613,0.918972775590686],"tickmode":"array","ticktext":["0.00","0.25","0.50","0.75"],"tickvals":[0,0.25,0.5,0.75],"categoryorder":"array","categoryarray":["0.00","0.25","0.50","0.75"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Distribution","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96751968503937},"annotations":[{"text":"Ability","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10b24722d567e":{"fill":{},"x":{},"y":{},"type":"bar"}},"cur_data":"10b24722d567e","visdat":{"10b24722d567e":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script></p>
+</div>
+<div id="education" class="section level2">
+<h2>Education</h2>
+</div>
+<div class="section level2">
+<h2><div id="htmlwidget-0e8cc529553b2a658898" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0e8cc529553b2a658898">{"x":{"data":[{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001],"base":[0,0,0,0,0],"x":[0.7,1.7,2.7,3.7,4.7],"y":[0.0473482592718816,0.205564003123135,0.307325810970441,0.250353922416641,0.189408004217901],"text":["Ability: Abled<br />educ: Less than a high school graduate<br />Distribution: 0.04734826","Ability: Abled<br />educ: High school graduate or GED<br />Distribution: 0.20556400","Ability: Abled<br />educ: Some college or associates degree<br />Distribution: 0.30732581","Ability: Abled<br />educ: Bachelor's degree<br />Distribution: 0.25035392","Ability: Abled<br />educ: Graduate degree or professional degree<br />Distribution: 0.18940800"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001],"base":[0,0,0,0,0],"x":[1,2,3,4,5],"y":[0.150516733237745,0.349675452554208,0.344789696359919,0.101131265558627,0.0538868522895004],"text":["Ability: Disabled<br />educ: Less than a high school graduate<br />Distribution: 0.15051673","Ability: Disabled<br />educ: High school graduate or GED<br />Distribution: 0.34967545","Ability: Disabled<br />educ: Some college or associates degree<br />Distribution: 0.34478970","Ability: Disabled<br />educ: Bachelor's degree<br />Distribution: 0.10113127","Ability: Disabled<br />educ: Graduate degree or professional degree<br />Distribution: 0.05388685"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0],"x":[1.3,2.3,3.3,4.3,5.3],"y":[0.196094991666574,0.395255466241148,0.267557633787296,0.0881323445917045,0.0529595637132773],"text":["Ability: Wheelchair<br />educ: Less than a high school graduate<br />Distribution: 0.19609499","Ability: Wheelchair<br />educ: High school graduate or GED<br />Distribution: 0.39525547","Ability: Wheelchair<br />educ: Some college or associates degree<br />Distribution: 0.26755763","Ability: Wheelchair<br />educ: Bachelor's degree<br />Distribution: 0.08813234","Ability: Wheelchair<br />educ: Graduate degree or professional degree<br />Distribution: 0.05295956"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":146.649165496696,"l":43.1050228310502},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Education","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,5.6],"tickmode":"array","ticktext":["Less than a high school graduate","High school graduate or GED","Some college or associates degree","Bachelor's degree","Graduate degree or professional degree"],"tickvals":[1,2,3,4,5],"categoryorder":"array","categoryarray":["Less than a high school graduate","High school graduate or GED","Some college or associates degree","Bachelor's degree","Graduate degree or professional degree"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.0197627733120574,0.415018239553206],"tickmode":"array","ticktext":["0.0","0.1","0.2","0.3","0.4"],"tickvals":[0,0.1,0.2,0.3,0.4],"categoryorder":"array","categoryarray":["0.0","0.1","0.2","0.3","0.4"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Distribution","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96751968503937},"annotations":[{"text":"Ability","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10b2437ca4835":{"fill":{},"x":{},"y":{},"type":"bar"}},"cur_data":"10b2437ca4835","visdat":{"10b2437ca4835":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script></h2>
+<table>
+<thead>
+<tr class="header">
+<th align="center">educ</th>
+<th align="center">Abled</th>
+<th align="center">Disabled</th>
+<th align="center">Wheelchair</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Less than a high school</td>
+<td align="center">8809464</td>
+<td align="center">1683660</td>
+<td align="center">278477</td>
+</tr>
+<tr class="even">
+<td align="center">graduate</td>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
+<p>High school graduate or GED 38246575 3911422 561306</p>
+<p>Some college or associates 57180048 3856770 379961<br />
+degree</p>
+<pre><code>  Bachelor&#39;s degree        46580042   1131241      125158   
+
+ Graduate degree or        35240642    602771      75208    
+ professional degree                                        </code></pre>
+<hr />
+</div>
+<div id="gender" class="section level2">
+<h2>Gender</h2>
+<div id="htmlwidget-c1bbaa49c0bc0f539dd3" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c1bbaa49c0bc0f539dd3">{"x":{"data":[{"orientation":"v","width":[0.3,0.3],"base":[0,0],"x":[0.7,1.7],"y":[0.499729670443544,0.500270329556456],"text":["Ability: Abled<br />r_sex: Male<br />Distribution: 0.4997297","Ability: Abled<br />r_sex: Female<br />Distribution: 0.5002703"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3],"base":[0,0],"x":[1,2],"y":[0.462318433678817,0.537681566321183],"text":["Ability: Disabled<br />r_sex: Male<br />Distribution: 0.4623184","Ability: Disabled<br />r_sex: Female<br />Distribution: 0.5376816"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3],"base":[0,0],"x":[1.3,2.3],"y":[0.467120118563666,0.532879881436334],"text":["Ability: Wheelchair<br />r_sex: Male<br />Distribution: 0.4671201","Ability: Wheelchair<br />r_sex: Female<br />Distribution: 0.5328799"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":35.9480480150573,"l":43.1050228310502},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Distribution of Gender","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,2.6],"tickmode":"array","ticktext":["Male","Female"],"tickvals":[1,2],"categoryorder":"array","categoryarray":["Male","Female"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.0268840783160591,0.564565644637242],"tickmode":"array","ticktext":["0.0","0.2","0.4"],"tickvals":[0,0.2,0.4],"categoryorder":"array","categoryarray":["0.0","0.2","0.4"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Distribution","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96751968503937},"annotations":[{"text":"Ability","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10b247e701736":{"fill":{},"x":{},"y":{},"type":"bar"}},"cur_data":"10b247e701736","visdat":{"10b247e701736":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="race" class="section level2">
+<h2>Race</h2>
+<div id="htmlwidget-f2c96e7ab3b15bbbfd38" style="width:672px;height:480px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f2c96e7ab3b15bbbfd38">{"x":{"data":[{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0],"x":[0.7,1.7,2.7,3.7,4.7,5.7,6.7],"y":[0.727682720890639,0.119359888653879,0.0619909958297916,0.00808456687553514,0.00303287337535451,0.0327335911974908,0.0471153631773099],"text":["Ability: Abled<br />r_race: White<br />Distribution: 0.727682721","Ability: Abled<br />r_race: Black or African American<br />Distribution: 0.119359889","Ability: Abled<br />r_race: Asian<br />Distribution: 0.061990996","Ability: Abled<br />r_race: American Indian or Alaska Native<br />Distribution: 0.008084567","Ability: Abled<br />r_race: Native Hawaiian or other Pacific Islander<br />Distribution: 0.003032873","Ability: Abled<br />r_race: Multiple responses selected<br />Distribution: 0.032733591","Ability: Abled<br />r_race: Some other race<br />Distribution: 0.047115363"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(236,226,240,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Abled","legendgroup":"Abled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0],"x":[1,2,3,4,5,6,7],"y":[0.640307982360608,0.231358881505462,0.0179162225908658,0.0211126951631776,0.00637940145320003,0.0427303997413658,0.04019441718532],"text":["Ability: Disabled<br />r_race: White<br />Distribution: 0.640307982","Ability: Disabled<br />r_race: Black or African American<br />Distribution: 0.231358882","Ability: Disabled<br />r_race: Asian<br />Distribution: 0.017916223","Ability: Disabled<br />r_race: American Indian or Alaska Native<br />Distribution: 0.021112695","Ability: Disabled<br />r_race: Native Hawaiian or other Pacific Islander<br />Distribution: 0.006379401","Ability: Disabled<br />r_race: Multiple responses selected<br />Distribution: 0.042730400","Ability: Disabled<br />r_race: Some other race<br />Distribution: 0.040194417"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(166,189,219,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Disabled","legendgroup":"Disabled","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"orientation":"v","width":[0.3,0.3,0.3,0.300000000000001,0.300000000000001,0.300000000000001,0.300000000000001],"base":[0,0,0,0,0,0,0],"x":[1.3,2.3,3.3,4.3,5.3,6.3,7.3],"y":[0.600444277916007,0.27306099055882,0.0086810533693664,0.0137790633744622,0.00203942045040449,0.0547141561923379,0.047281038138602],"text":["Ability: Wheelchair<br />r_race: White<br />Distribution: 0.600444278","Ability: Wheelchair<br />r_race: Black or African American<br />Distribution: 0.273060991","Ability: Wheelchair<br />r_race: Asian<br />Distribution: 0.008681053","Ability: Wheelchair<br />r_race: American Indian or Alaska Native<br />Distribution: 0.013779063","Ability: Wheelchair<br />r_race: Native Hawaiian or other Pacific Islander<br />Distribution: 0.002039420","Ability: Wheelchair<br />r_race: Multiple responses selected<br />Distribution: 0.054714156","Ability: Wheelchair<br />r_race: Some other race<br />Distribution: 0.047281038"],"type":"bar","marker":{"autocolorscale":false,"color":"rgba(28,144,153,1)","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)"}},"name":"Wheelchair","legendgroup":"Wheelchair","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":157.10294248786,"l":43.1050228310502},"plot_bgcolor":"rgba(235,235,235,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Distribution of Race","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.4,7.6],"tickmode":"array","ticktext":["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or other Pacific Islander","Multiple responses selected","Some other race"],"tickvals":[1,2,3,4,5,6,7],"categoryorder":"array","categoryarray":["White","Black or African American","Asian","American Indian or Alaska Native","Native Hawaiian or other Pacific Islander","Multiple responses selected","Some other race"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":13.2835201328352},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-0.036384136044532,0.764066856935171],"tickmode":"array","ticktext":["0.0","0.2","0.4","0.6"],"tickvals":[0,0.2,0.4,0.6],"categoryorder":"array","categoryarray":["0.0","0.2","0.4","0.6"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(255,255,255,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"Distribution","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":0.96751968503937},"annotations":[{"text":"Ability","x":1.02,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"left","yanchor":"bottom","legendTitle":true}],"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","showSendToCloud":false},"source":"A","attrs":{"10b246ec75172":{"fill":{},"x":{},"y":{},"type":"bar"}},"cur_data":"10b246ec75172","visdat":{"10b246ec75172":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="housing-density" class="section level2">
+<h2>Housing Density</h2>
+<!--- HBRESDN --->
+</div>
+<div id="population-density" class="section level2">
+<h2>Population Density</h2>
+<!--- HBPPOPDN --->
+</div>
+<div id="home-ownership" class="section level2">
+<h2>Home Ownership</h2>
+<!--- Homeown --->
+</div>
+<div id="personal-opinion-of-personal-health" class="section level2">
+<h2>Personal Opinion of Personal Health</h2>
+<!---  --->
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
