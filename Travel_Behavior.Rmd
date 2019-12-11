@@ -25,7 +25,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Mode Choice
 Below is the distribution of all modes choices and compared by ability. 
 
-```{r mode.choice}
+```{r mode.choice, echo=F}
 # Distribution of trips by mode
 # new functions
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), age1 = 18, age2 = 65) %>%
@@ -37,7 +37,7 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), age1 = 
 
 ## Primary Activity in Previous Week
 <!--- PRMACT --->
-```{r activity}
+```{r activity, echo=F, fig.width=10, fig.height=6}
 # Distribution of weekly activities
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
   nhts_barplot(prmact, "Distribution of Weekly Activities")
@@ -63,6 +63,7 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65)
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
   nhts_boxplot(cnttdtr)
 
+# Scale is way off...
 
 ```
 
