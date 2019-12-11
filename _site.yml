@@ -9,3 +9,5 @@ navbar:
       href: Demographics.html
     - text: "Travel Behavior"
       href: Travel_Behavior.html
+    - text: "Travel Patterns"
+      href: Travel_Patterns.html

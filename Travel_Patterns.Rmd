@@ -27,34 +27,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Trip Purpose
-According to the 2017 NHTS, trip purpose is different for wheelchair users than for abled users. A histogram below shows the frequency of trips by trip purpose. Only users between the ages of 18 and 65 are considered.
+According to the 2017 NHTS, trip purpose is different for wheelchair users than for abled users. A histogram below shows the frequency of trips by trip purpose for each of the Ability groups. Only users between the ages of 18 and 65 are considered.
 
-```{r trip.purpose, echo=F}
-# This attempt first filters by the ability column
-my_persons <- nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
-  group_by(hhpersonid, trippurp) %>% 
-  tally()
-
-# data to merge back onto the grid
-my_persons_ability <- nhts_persons %>% mutate(hhpersonid = paste(houseid, personid, sep = "-"),
-                                              Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
-                                                                  medcond6 == "02" | medcond6 == "03" ~ "Disabled",
-                                                                  medcond == "02" ~ "Abled")) %>% 
-  filter(r_age >= 18 & r_age < 65,
-           Ability != "NA")
-
-
-# expand grid then join with nhts data. tally the frequency of trip purpose
-grid <- expand_grid(hhpersonid = unique(my_persons$hhpersonid), trippurp = unique(my_persons$trippurp))
-
-my_tally <- my_persons %>% right_join(grid) %>%
-  mutate(n = ifelse(is.na(n), 0, n)) 
-
-left_join(my_tally, my_persons_ability, "hhpersonid")
-
-```
- Here is how I did it.
-```{r trip.purpose.tryagain}
+```{r trip.purpose.tryagain, echo=F, message=F, warning=F, fig.width=10, fig.height=6}
 # This attempt contains all trips (all households, persons, etc.)
 nhts_persons <- nhts_persons %>% mutate(hhpersonid = paste(houseid, personid, sep = "-"),
                                         Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
@@ -99,36 +74,7 @@ plot <-  ggplot(joined_grid_trips, aes(x = n)) +
 
 ```
 
-Here is how Dr. Macfarlane did it.
-```{r macfarlane, echo=F}
-# households
-my_hh <- nhts_households %>%
-  filter(urban == "01") %>% # filtered by urban areas
-  filter(msasize == "01") %>% # size less than 250,000
-  filter(travday %in% c(sprintf("%02d", 2:6))) %>% # on weekdays
-  select(houseid, numadlt, wrkcount, hhsize, hhvehcnt) # kept columns with household details, num of adults, workers, total hh, and vehicles
 
-my_trips <- nhts_trips %>%
-  filter(houseid %in% my_hh$houseid) %>%
-  group_by(houseid, trippurp) %>% # why not personid?
-  tally() 
-
-# household / purpose expander
-expander <- expand.grid(
-  houseid = unique(my_trips$houseid), trippurp = unique(my_trips$trippurp), 
-  stringsAsFactors = FALSE)
-
-my_trips <- my_trips %>% right_join(expander) %>%
-  mutate(n = ifelse(is.na(n), 0, n)) %>%
-  arrange(houseid)
-
-my_data <- left_join(my_trips, my_hh, by = "houseid") # just stacked on the columns needed.
-
-
-# here is my addition
-nhts_clean(my_trips, nhts_persons, "houseid")
-
-```
 
 
 ## Mode Choice

@@ -50,7 +50,7 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65)
   nhts2_barplot(prmact, worker, "Distribution of Primary Activity by Worker Status")
 
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
-  nhts2_barplot(prmact, worker, "Distribution of Primary Activity by Education Level")
+  nhts2_barplot(prmact, worker, "Distribution of Primary Activity by Worker Status")
 
 
 ```
@@ -68,39 +68,11 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65)
 ```
 
 <!-- sameplc reason for no trips NOT WORKING-->
-```{r trip.reason, echo=F}
-nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
-  nhts_barplot(sameplc)
- # above is not working. lets try it manually
-table1 <- nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
-    group_by(worker, Ability, sameplc) %>% 
-    filter(sameplc > 0,
-           worker > 0) %>%
-    summarise(Population = sum(wtperfin)) %>%
-    as_factor() %>%
-    mutate(Distribution = Population/sum(Population))
-  
-  plot1 <- ggplot(table1, aes(x = sameplc, y = Distribution)) + 
-    geom_col(aes(fill = Ability), colour = "Black", position = "dodge") +
-    #ggtitle(title, subtitle) +
-    #labs(x = xlab, y = ylab) +
-    scale_fill_brewer(palette = "PuBuGn", direction = 2) + 
-    theme(axis.text.x = element_text(size  = 10, 
-                                     angle = 45,
-                                     hjust = 1,
-                                     vjust = 1)) + 
-    facet_wrap(~worker)                        
-  #scale_x_discrete(labels = abbreviate)
-  
-  #return(plot)
-  plot1 %>% ggplotly(tooltip = c("x", "y", "fill"))
 
-
-```
 
 ## Trip Purpose
 <!--- trip purpose summary: Whytrip1s --->
-```{r trip.purpose, echo=F}
+```{r trip.purpose, echo=F, fig.width=10, fig.height=6}
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65) %>%
   nhts2_barplot(whytrp1s, worker, "Trip Purpose by Worker Status")
 
@@ -112,42 +84,46 @@ nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid"), 18, 65)
 
 ## Trip Distance
 <!--- TRPMILES --->
-
-```{r trip.miles}
+The summary table below shows the breakdown of length of trips in miles by Ability group.
+```{r trip.miles, echo=F}
 # stat summary of trip distance by work status
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
   nhts_stat_summary(trpmiles)
 
 ```
 
-```{r trip.boxplot}
+```{r trip.boxplot, echo=F, fig.width=10, fig.height=6, warning=F}
 # stat summary of trip distance by work status
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
   nhts2_boxplot(trpmiles, trptrans, worker, title = "Comparison of Trip Distance by Worker Status and mode")
+
+# The scale is way off here too.
 
 ```
 
 ## Trip Duration in Minutes
 <!--- TRVLCMIN responses 0-1200 --->
-
-```{r min.summary}
+The summary table below shows the breakdown of trip duration in minutes by Ability group.
+```{r min.summary, echo=F}
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
   nhts_stat_summary(trvlcmin)
 
 ```
 
-```{r boxplot.minutes}
+```{r boxplot.minutes, echo=F, fig.width=10, fig.height=6, warning=F}
 
 # test the function
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%
   nhts2_boxplot(trvlcmin, worker, r_sex)
+
+# probably should cut out the outliers here and label the axes
 
 ```
 
 ## Number of Drivers in Household
 <!--- drvrcnt -->
 
-```{r drivers.number}
+```{r drivers.number, echo=F, fig.width=10, fig.height=6, warning=F}
 nhts_clean(nhts_persons, nhts_households, join_by = "houseid") %>%
   nhts_barplot(drvrcnt)
 
@@ -159,7 +135,7 @@ nhts_clean(nhts_persons, nhts_households, join_by = "houseid") %>%
 ## Trip distance in miles for personally driven vehicle trips
 <!--- VMT_MILE responses 0-5441 --->
 
-```{r boxplot.personal.miles, echo = F}
+```{r boxplot.personal.miles, echo = F, message=F, warning=F, fig.width=10, fig.height=6, warning=F}
 
 # test the function
 nhts_clean(nhts_trips, nhts_persons, join_by = c("houseid", "personid")) %>%

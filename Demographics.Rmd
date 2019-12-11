@@ -91,60 +91,27 @@ nhts_persons %>% left_join(nhts_households, by = "houseid") %>%
 
 ```
 
-
-```{r population.boxplot, echo=F, warnings=F}
-# Show boxplot of age distribution with age on y axis and wheelchair boolean on the x
-nhts_persons %>%
-  mutate(Ability = case_when(w_chair == "07" | w_mtrchr == "08" ~ "Wheelchair",
-                             medcond6 == "02" | medcond6 == "03" ~ "Disabled",
-                             medcond == "02" ~ "Abled")) %>%
-  filter(r_age > 0, Ability != "NA") %>%
-  #group_by(Ability, r_age, r_sex) %>%
-  ggplot(aes(x = Ability, y = r_age)) + geom_boxplot(aes(color = r_sex)) +
-  stat_compare_means(aes(group = r_sex))
-  
-```
+<!--- I deleted the age boxplot here --->
 
 ## Income
 
 ```{r income.setup, echo=F}
-# Clean the income data and %>% into the barplot
-clean_nhts(nhts_persons, nhts_households, "houseid", hhfaminc) %>%
-  plotly_bar_nhts(hhfaminc, Distribution, "Distribution of Household Income")
 
 # Output functions
 nhts_clean(nhts_persons, nhts_households, "houseid") %>%
-  nhts_barplot(hhfaminc, "Distribution of income")
+  nhts_barplot(hhfaminc, "Distribution of Income")
 
 # barplot2
 nhts_clean(nhts_persons, nhts_households, "houseid") %>%
-  nhts_barplot2(hhfaminc, worker, "Income by worker status")
+  nhts2_barplot(hhfaminc, worker, "Income by worker status")
 
-# test barplot 2
-nhts_clean(nhts_persons, nhts_households, "houseid") %>%
-  group_by(worker, Ability, hhfaminc) %>% 
-    filter(worker > 0,
-           hhfaminc > 0) %>%
-    summarise(Population = sum(wtperfin)) %>%
-    as_factor() %>%
-    mutate(Distribution = Population/sum(Population)) %>%
-  ggplot( aes(x = hhfaminc, y = Distribution)) + 
-    geom_col(aes(fill = Ability), colour = "Black", position = "dodge") +
-    ggtitle("title", subtitle = NULL) +
-    labs(x = "xlab", y = "ylab") +
-    scale_fill_brewer(palette = "PuBuGn", direction = 2) + 
-    theme(axis.text.x = element_text(size  = 10, 
-                                     angle = 45,
-                                     hjust = 1,
-                                     vjust = 1)) + 
-    facet_wrap(~worker)
   
 ```
 
 
 
 ## Employment
-
+This plot shows the distribution of workers by Ability groups. Looks like there are a lot of wheelchair users unemployed between the ages of 18 and 64.
 ```{r employ, echo=F}
 clean_nhts(nhts_persons, nhts_households, "houseid", worker) %>%
   plotly_bar_nhts(worker, Distribution, "Worker Status", ylab = "Distribution")
@@ -156,19 +123,13 @@ clean_nhts(nhts_persons, nhts_households, "houseid", worker) %>%
 clean_nhts(nhts_persons, nhts_households, "houseid", educ) %>%
   plotly_bar_nhts(educ, Distribution, "Education", ylab = "Distribution")
 
-# test the spread function
+# you can input survey, population or distribution
 nhts_clean(nhts_persons, nhts_households, "houseid") %>%
-  nhts_distribution(educ, Survey)
+  nhts_distribution(educ, Population)
 
 
 ```
 
-## Relationship Status
-
-```{r relation, echo=F}
-clean_nhts(nhts_persons, nhts_households, "houseid", r_relat) %>%
-  plotly_bar_nhts(r_relat, Distribution, "Who filled out the survey?", ylab = "Distribution")
-```
 
 ## Gender
 
