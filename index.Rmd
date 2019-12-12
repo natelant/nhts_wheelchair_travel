@@ -3,3 +3,14 @@ title: "2017 National Household Travel Survey"
 ---
 
 The 2017 National Household Travel Survey contains data surrounding mobility for users with disabilities, including wheelchairs. Wheelchairs introduce a unique challenge to accessibility in all modes, but most recently to the mode of on-demand ride-hailing....
+
+## New York
+In 2018, the Taxi and Limousine Commission (TLC) in New York City issued a mandate requiring Uber, Lyft and Via to make wheelchair accessible service a growing part of their operations. While this particular mandate was not adopted, a settlement was reached in the New York State Supreme Court. The NYC TLC retained the mandate that would require ... TNCs to meet a wait-time requirement. The wait time requirement states that, by 2021, TNCs must either service at least 80 percent of requests for wheelchair-accessible vehicles in under 10 minutes and 90 percent in under 15 minutes, or associate with a company that has the capacity to meet those requirements (DeFazio et al., 2019).
+
+
+## California
+In September of 2018, the State of California filed SB 1376 which "requires the Public Utilities Commission, by January 1, 2019, to begin conducting workshops with stakeholders in order to determine community WAV demand and WAV supply and to develop and provide recommendations regarding specified topics for programs for on-demand services and partnerships. The bill would require each TNC, by July 1, 2019, to pay on a quarterly basis to the commission an amount equivalent to, at a minimum, $0.05 for each TNC trip completed. The bill would require moneys collected by the commission to be deposited in the TNC Access for All Fund, which the bill would create, and would continuously appropriate moneys deposited in the fund to the commission for purposes of the program. The bill would require the commission to distribute funds from the TNC Access for All Fund on a competitive basis to access providers that establish on-demand transportation programs or partnerships to meet the needs of persons with disabilities." (CA SB, 2018)
+
+
+## U.S. DOT
+The U.S. Department of Transportation published that People with travel-limiting disabilities accounted for 8.5 percent of the population in 2001 and 10.2 percent in 2009. An estimated 13.4 million Americans age 18 to 64 have travel-limiting disabilities, accounting for slightly more than half of people with disabilities. 12.4 percent of people age 18 to 64 without disabilities report using ride-hailing services at least once in the last 30 days, only 4.6 percent of people with disabilities report doing so. Some organizations, including transit agencies and healthcare providers, have begun subsidizing ride-hailing services for people with disabilities (Brumbaugh, 2018).
